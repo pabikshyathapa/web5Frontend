@@ -87,7 +87,7 @@ export default function LoginForm() {
           {/* Divider */}
           <div className="text-center mt-4 text-black">Or</div>
 
-          {/* Social Login
+          Social Login
           <div className="flex justify-center space-x-6">
             <button className="text-2xl">
               <img src="/images/google-icon.svg" alt="Google" className="h-8" />
@@ -95,7 +95,7 @@ export default function LoginForm() {
             <button className="text-2xl">
               <img src="/images/facebook-icon.svg" alt="Facebook" className="h-8" />
             </button>
-          </div> */}
+          </div>
 
           {/* Sign Up Redirect */}
           <div className="text-center">
