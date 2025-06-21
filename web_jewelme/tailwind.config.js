@@ -9,7 +9,10 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}"
 
   ],
-
-  plugins: [],
-
+  theme: {
+    extend: {},
+  },
+plugins: [
+  require('tailwind-scrollbar-hide'),
+],
 }

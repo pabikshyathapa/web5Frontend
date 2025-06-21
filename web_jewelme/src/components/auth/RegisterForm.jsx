@@ -1,46 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useRegisterUser as userRegisterUserTan } from "../../hooks/useRegisteruser";
+import { useNavigate } from "react-router-dom";
+import { useRegisterUser } from "../../hooks/useRegisteruser";
 
 export default function RegisterForm() {
-  const { mutate, data, error, isLoading, isSuccess, isError } = userRegisterUserTan();
+  const { mutate, data, error, isLoading, isSuccess, isError } = useRegisterUser();
+  const[message,setMessage]=useState("");
+  const navigate=useNavigate();
 
   const validationSchema = Yup.object({
-    username: Yup.string().required("Username is required"),
+    // username: Yup.string().required("Username is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().min(8, "Password must be at least 8 characters").required("Password is required"),
-    firstname: Yup.string().required("First name is required"),
-    lastname: Yup.string().required("Last name is required"),
+    password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+    name: Yup.string().required("First name is required"),
+    phone: Yup.string().required("Phone number is required"),
+
+    // lastname: Yup.string().required("Last name is required"),
   });
 
   const formik = useFormik({
     initialValues: {
-      username: "",
+      // username: "",
       email: "",
       password: "",
-      firstname: "",
-      lastname: "",
+      name: "",
+      phone:"",
+      // lastname: "",
     },
     validationSchema,
     onSubmit: (values) => {
-      const formData = {
-        username: values.username,
-        firstName: values.firstname,
-        lastName: values.lastname,
-        email: values.email,
-        password: values.password,
-      };
-
-      mutate(formData, {
-        onSuccess: () => {
-          alert("Registration successful!");
+      mutate(values, {
+        onSuccess: (response) => {
+          setMessage(response?.message || "Registration successful!");
           formik.resetForm();
         },
-        onError: (err) => {
-          alert("Registration failed: " + (err.message || "Unknown error"));
+        onError: (error) => {
+          setMessage(error?.response?.data?.message || "Registration failed. Please try again.");
+      //   },
+      // });
+    
+  //   validationSchema,
+  //   onSubmit: (values) => {
+  //     const formData = {
+  //       // username: values.username,
+  //       name: values.name,
+  //       // lastName: values.lastname,
+  //       email: values.email,
+  //       password: values.password,
+  //     };
+
+  //     mutate(formData, {
+  //       onSuccess: () => {
+  //         alert("Registration successful!");
+  //         formik.resetForm();
+  //       },
+  //       onError: (err) => {
+  //         alert("Registration failed: " + (err.message || "Unknown error"));
         },
-      });
+      },
+    );
     },
   });
 
@@ -64,18 +83,18 @@ export default function RegisterForm() {
     <form onSubmit={formik.handleSubmit} className="space-y-4">
       {/* First Name */}
       <div>
-        <label className="text-red-600 block">Name</label>
+        <label className="text-red-600 block">Full Name</label>
         <input
           type="text"
-          name="firstname"
+          name="name"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values.firstname}
+          value={formik.values.name}
           placeholder="Enter your name"
           className="w-full border rounded px-4 py-2 bg-gray-100"
         />
-        {formik.touched.firstname && formik.errors.firstname && (
-          <p className="text-sm text-red-500">{formik.errors.firstname}</p>
+        {formik.touched.name && formik.errors.name && (
+          <p className="text-sm text-red-500">{formik.errors.name}</p>
         )}
       </div>
 
@@ -94,6 +113,23 @@ export default function RegisterForm() {
         {formik.touched.email && formik.errors.email && (
           <p className="text-sm text-red-500">{formik.errors.email}</p>
         )}
+
+      </div>
+       {/* First Name */}
+      <div>
+        <label className="text-red-600 block">Phone Number</label>
+        <input
+          type="phone"
+          name="phone"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.phone}
+          placeholder="Enter your phone number"
+          className="w-full border rounded px-4 py-2 bg-gray-100"
+        />
+        {formik.touched.phone && formik.errors.phone && (
+          <p className="text-sm text-red-500">{formik.errors.phone}</p>
+        )}
       </div>
 
       {/* Password */}
@@ -106,14 +142,14 @@ export default function RegisterForm() {
           onBlur={formik.handleBlur}
           value={formik.values.password}
           placeholder="Enter password"
-          className="w-full border rounded px-4 py-2 bg-gray-100"
+          className="w-full border rounded px-4 py-2  bg-gray-100"
         />
         {formik.touched.password && formik.errors.password && (
           <p className="text-sm text-red-500">{formik.errors.password}</p>
         )}
       </div>
 
-      <button
+      <button 
         type="submit"
         disabled={isLoading}
         className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded"
@@ -136,3 +172,4 @@ export default function RegisterForm() {
 /</div>
   );
 }
+  

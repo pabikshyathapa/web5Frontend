@@ -9,6 +9,19 @@ import LoginTest from '../pages/LoginTest'
 import GuestRoute from './GuestRoute'
 import NormalUserRoute from './NormalUserRoute'
 import AuthContextProvider from '../auth/AuthProvider'
+//adminpages
+import Dashboard from '../pages/Dashboard'
+import Users from '../pages/Users'
+import Categories from '../pages/Categories'
+import Products from '../pages/Products'
+
+import CategoryManagement from '../pages/admin/CategoryManagement'
+import CreateCategory from '../pages/admin/CreateCategory'
+import ViewCategory from '../pages/admin/ViewCategory'
+import UpdateCategory from '../pages/admin/UpdateCategory'
+import AdminLayout from '../layouts/AdminLayout'
+
+
 
 export default function AppRouter() {
   return (
@@ -31,16 +44,27 @@ export default function AppRouter() {
         </Route>
         <Route element={<MainLayout />}>
         <Route path='/admin/*'>
-        <Route path='dashboard' element={<>Dashboard</>}></Route>
-        <Route path='users' element={<>Users</>}></Route>
-        <Route path='Categories' element={<>Categories</>}></Route>
-        <Route path='products' element={<>Products</>}></Route>
+
+        <Route path='dashboard' element={<Dashboard/>}></Route>
+        <Route path='users' element={<Users/>}></Route>
+        <Route path='Categories' element={<Categories/>}></Route>
+        <Route path='products' element={<Products/>}></Route>
+        </Route>
+        <Route element={<AdminLayout/>}>
+          <Route path='/admins/*'>
+            {/* <Route path='products' element={<ProductManagement />}></Route> */}
+            
+            <Route path='categoryy' element={<CategoryManagement/>}></Route>
+            <Route path='categoryy/:id' element={<ViewCategory/>}></Route>
+            <Route path='categoryy/:id/edit' element={<UpdateCategory/>}></Route>
+            <Route path='categoryy/create' element={<CreateCategory/>}></Route>
+          </Route>
         </Route>
         </Route>
       </Routes>
     </BrowserRouter>
     </AuthContextProvider> 
-  )
+  );
 }
 // task
 // in login page

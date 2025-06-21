@@ -40,3 +40,12 @@
 .read-the-docs {
   color: #888;
 }
+/* Hide scrollbar cross-browser */
+#catalog-scroll::-webkit-scrollbar {
+  display: none;
+}
+#catalog-scroll {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
