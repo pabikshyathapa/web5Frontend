@@ -45,7 +45,7 @@ export default function UpdateCategory() {
    return (
   <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-10">
     <div className="w-full max-w-xl bg-white shadow-2xl rounded-3xl p-8">
-      <h2 className="text-2xl font-bold text-indigo-700 mb-6 text-center">Update Category</h2>
+      <h2 className="text-2xl font-bold text-red-500 mb-6 text-center">Update Category</h2>
 
       <form onSubmit={formik.handleSubmit} className="space-y-6">
         {/* Category Name */}
@@ -99,7 +99,7 @@ export default function UpdateCategory() {
         <div className="pt-4">
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 shadow-md"
+            className="w-full bg-red-500 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 shadow-md"
           >
             Update
           </button>

@@ -34,43 +34,64 @@ export default function CreateCategory() {
         }
     )
     return (
+  <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-white flex items-center justify-center p-6">
+    <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Create Category</h2>
+      <form onSubmit={formik.handleSubmit} className="space-y-5">
+        {/* Category Name */}
         <div>
-            CreateCategory
-            <form onSubmit={formik.handleSubmit}>
-                <label>Category Name</label>
-                <input
-                    name='name'
-                    onChange={formik.handleChange}
-                    value={formik.values.name}
-                >
-                </input>
-                {formik.touched.name && formik.errors.name && <>{formik.errors.name}</>}
-                <label>Category Image</label>
-                <input
-                    name='image'
-                    type='file'
-                    accept='image/*'
-                    onChange={
-                        (e) => {
-                            const file = e.currentTarget.files[0]
-                            if (file) formik.setFieldValue("image", file)
-                        }
-                    }
-                >
-                </input>
-                {formik.touched.image && formik.errors.image && <>{formik.errors.image}</>}
-                {
-                    formik.values.image &&
-                    <td>
-                    <img
-                        className='w-32 h-32 object-cover'
-                        src={URL.createObjectURL(formik.values.image)}
-                    >
-                    </img>
-                    </td>
-                }
-                <button type='submit'>Create</button>
-            </form>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
+          <input
+            name="name"
+            type="text"
+            onChange={formik.handleChange}
+            value={formik.values.name}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            placeholder="Enter category name"
+          />
+          {formik.touched.name && formik.errors.name && (
+            <p className="text-sm text-red-500 mt-1">{formik.errors.name}</p>
+          )}
         </div>
-    )
+
+        {/* Category Image */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Category Image</label>
+          <input
+            name="image"
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.currentTarget.files[0];
+              if (file) formik.setFieldValue("image", file);
+            }}
+            className="w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-red-500 file:text-white hover:file:bg-indigo-600"
+          />
+          {formik.touched.image && formik.errors.image && (
+            <p className="text-sm text-red-500 mt-1">{formik.errors.image}</p>
+          )}
+        </div>
+
+        {/* Preview */}
+        {formik.values.image && (
+          <div className="mt-4">
+            <img
+              src={URL.createObjectURL(formik.values.image)}
+              alt="Preview"
+              className="w-32 h-32 object-cover rounded-md border shadow"
+            />
+          </div>
+        )}
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="w-full bg-red-500 text-white py-2 px-4 rounded-md shadow hover:bg-indigo-700 transition duration-200"
+        >
+          Create Category
+        </button>
+      </form>
+    </div>
+  </div>
+);
 }

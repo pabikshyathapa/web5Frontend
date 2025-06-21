@@ -4,7 +4,7 @@ import CategoryTable from '../../components/admin/categoryTable'
 export default function CategoryManagement() {
     return (
         <div>
-            CategoryManagement
+            {/* CategoryManagement */}
 
             <CategoryTable />
         </div>
