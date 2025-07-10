@@ -1,22 +1,32 @@
-// src/services/admin/userApi.js
+import axios from "../api"
 
-import axios from "../api";
+export const getAllUserApi = () => {
+  const token = localStorage.getItem("token"); 
+  return axios.get("/admin/users", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+};
 
-// Get all users
-export const getAllUsersApi = () => axios.get("/admin/user");
+export const createUserApi = async (formData) => {
+    const res = await axios.post("/admin/users", formData);
+    return res.data;
+};
+export const getUserByIdApi = async (id) => {
+  const res = await axios.get(`/admin/users/${id}`);
+  return res.data; 
+};
+export const updateUserApi = async ({ id, data }) => {
+    const response = await axios.put(`/admin/users/${id}`, data);
+    return response.data;
+};
 
-// Create a new user
-export const createOneUserApi = (data) =>
-    axios.post("/admin/user", data);
-
-// Get a single user by ID
-export const getOneUserApi = (id) =>
-    axios.get("/admin/user/" + id);
-
-// Update a user by ID
-export const updateOneUserApi = (id, data) =>
-    axios.put("/admin/user/" + id, data);
-
-// Delete a user by ID
-export const deleteOneUserApi = (id) =>
-    axios.delete("/admin/user/" + id);
+export const deleteUserApi = (id) => {
+  const token = localStorage.getItem("token");
+  return axios.delete(`/admin/users/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+};

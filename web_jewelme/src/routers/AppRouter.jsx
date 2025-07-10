@@ -23,6 +23,7 @@ import AdminLayout from '../layouts/AdminLayout'
 import ProductManagement from '../pages/admin/ProductManagement'
 import CreateProduct from '../pages/admin/createProduct'
 import UserManagement from '../pages/admin/UserManagement'
+import AdminDashboard from '../pages/AdminDashboard'
 
 
 
@@ -39,6 +40,8 @@ export default function AppRouter() {
           <Route element={<GuestRoute/>}>
           <Route path="/login" element={<Login />}></Route>
           <Route path='/register' element={<Register />}></Route>
+          <Route path='/dashboard' element={<Dashboard />}></Route>
+
         </Route>
         </Route>
         <Route path='/normal/*' element={<NormalUserRoute/>}>
@@ -48,8 +51,7 @@ export default function AppRouter() {
         </Route>
         <Route element={<MainLayout />}>
         <Route path='/admin/*'>
-
-        <Route path='dashboard' element={<Dashboard/>}></Route>
+        <Route path='adashboard' element={<AdminDashboard/>}></Route>
         <Route path='users' element={<Users/>}></Route>
         <Route path='Categories' element={<Categories/>}></Route>
         <Route path='products' element={<Products/>}></Route>

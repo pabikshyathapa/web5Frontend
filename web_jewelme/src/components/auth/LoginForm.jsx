@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function LoginForm() {
+  const navigate = useNavigate();
+  const [loginError, setLoginError] = useState("");
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -12,18 +19,44 @@ export default function LoginForm() {
       email: Yup.string().email("Invalid email").required("Email is required"),
       password: Yup.string().required("Password is required"),
     }),
-    onSubmit: (values) => {
-      // Handle login
-      console.log("Logging in with:", values);
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post("http://localhost:5050/api/auth/login", {
+          email: values.email,
+          password: values.password,
+        });
+
+        if (response.data.success) {
+          // Save token and user data
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("user", JSON.stringify(response.data.data));
+
+          setLoginError(""); 
+
+          toast.success("Login successful!", { position: "top-center" });
+
+          // Redirect after short delay
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 800);
+        } else {
+          setLoginError("Invalid email or password.");
+        }
+      } catch (err) {
+        console.error("Login error:", err);
+        setLoginError("Invalid email or password.");
+      }
     },
   });
 
   return (
     <div className="flex min-h-screen bg-white">
+      <ToastContainer />
+
       {/* Left Side Image */}
       <div className="w-1/2 bg-[#e0d8cc] flex items-center justify-center">
         <img
-          src="/images/login.png" // Use your actual image path
+          src="/images/login.png"
           alt="Jewelry display"
           className="object-contain max-h-full"
         />
@@ -75,6 +108,11 @@ export default function LoginForm() {
               </div>
             </div>
 
+            {/* Login error message */}
+            {loginError && (
+              <p className="text-sm text-red-500 text-center">{loginError}</p>
+            )}
+
             {/* Submit Button */}
             <button
               type="submit"
@@ -87,16 +125,6 @@ export default function LoginForm() {
           {/* Divider */}
           <div className="text-center mt-4 text-black">Or</div>
 
-          {/* Social Login
-          <div className="flex justify-center space-x-6">
-            <button className="text-2xl">
-              <img src="/images/google-icon.svg" alt="Google" className="h-8" />
-            </button>
-            <button className="text-2xl">
-              <img src="/images/facebook-icon.svg" alt="Facebook" className="h-8" />
-            </button>
-          </div> */}
-
           {/* Sign Up Redirect */}
           <div className="text-center">
             <span className="text-black">Don’t have an account? </span>
@@ -106,8 +134,6 @@ export default function LoginForm() {
           </div>
         </div>
       </div>
-
-      
     </div>
   );
 }
