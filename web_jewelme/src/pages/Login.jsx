@@ -21,15 +21,15 @@ export default function Login() {
     
     return (
         <div>
-            <div>Login</div>
-            <NavLink to="/">Go back</NavLink>
-            <Link to="/register">Register</Link>
-            <button onClick={returnToHome}>Button Click</button>
-            <button onClick={
+            {/* <div>Login</div> */}
+            {/* <NavLink to="/">Go back</NavLink> */}
+            {/* <Link to="/register">Register</Link> */}
+            {/* <button onClick={returnToHome}>Button Click</button> */}
+            {/* <button onClick={
                 (event) => {
                     returnToHome(event)
                 }
-            }>Button Click Callback</button>
+            }></button> */}
 
             <div>
                 <LoginForm/>

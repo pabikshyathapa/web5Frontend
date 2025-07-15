@@ -105,7 +105,7 @@ export default function UserTable() {
                 </td>
 
                 <td className="px-4 py-3 font-medium">
-                  {user.firstName} {user.lastName}
+                  {user.name}
                 </td>
 
                 <td className="px-4 py-3 text-gray-600">{user.email}</td>

@@ -13,7 +13,7 @@ import AuthContextProvider from '../auth/AuthProvider'
 import Dashboard from '../pages/Dashboard'
 import Users from '../pages/Users'
 import Categories from '../pages/Categories'
-import Products from '../pages/Products'
+// import Products from '../pages/Products'
 
 import CategoryManagement from '../pages/admin/CategoryManagement'
 import CreateCategory from '../pages/admin/CreateCategory'
@@ -24,9 +24,9 @@ import ProductManagement from '../pages/admin/ProductManagement'
 import CreateProduct from '../pages/admin/createProduct'
 import UserManagement from '../pages/admin/UserManagement'
 import AdminDashboard from '../pages/AdminDashboard'
-
-
-
+import UpdateProduct from '../pages/admin/UpdateProduct'
+import ViewProducts from '../pages/admin/viewProduct'
+import ProductDetails from '../pages/productDetail'
 
 export default function AppRouter() {
   return (
@@ -41,6 +41,10 @@ export default function AppRouter() {
           <Route path="/login" element={<Login />}></Route>
           <Route path='/register' element={<Register />}></Route>
           <Route path='/dashboard' element={<Dashboard />}></Route>
+          <Route path='/products/:id' element={<ProductDetails />}></Route>
+          
+          
+
 
         </Route>
         </Route>
@@ -54,12 +58,14 @@ export default function AppRouter() {
         <Route path='adashboard' element={<AdminDashboard/>}></Route>
         <Route path='users' element={<Users/>}></Route>
         <Route path='Categories' element={<Categories/>}></Route>
-        <Route path='products' element={<Products/>}></Route>
+        {/* <Route path='products' element={<Products/>}></Route> */}
         </Route>
         <Route element={<AdminLayout/>}>
           <Route path='/admins/*'>
             <Route path='productss' element={<ProductManagement />}></Route>
             <Route path='productss/create' element={<CreateProduct/>}></Route>
+            <Route path='productss/:id/edit' element={<UpdateProduct/>}></Route>
+            <Route path='productss/:id' element={<ViewProducts/>}></Route>
             <Route path='categoryy' element={<CategoryManagement/>}></Route>
             <Route path='categoryy/:id' element={<ViewCategory/>}></Route>
             <Route path='categoryy/:id/edit' element={<UpdateCategory/>}></Route>
@@ -74,10 +80,3 @@ export default function AppRouter() {
     </AuthContextProvider> 
   );
 }
-// task
-// in login page
-// make 2 link 
-// go back -> routes to homepage
-// register -> routes to register
-// make footer and add it in layout
-// Footer - 2025 @ MyApp

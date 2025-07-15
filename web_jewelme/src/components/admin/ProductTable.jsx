@@ -1,193 +1,268 @@
 import React, { useState } from 'react'
 import { useAdminProduct, useDeleteOneProduct } from '../../hooks/admin/useAdminProduct'
 import { getBackendImageUrl } from '../../utils/backend-image'
-import { FaBox, FaEye, FaEdit, FaTrash, FaPlus } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import DeleteModal from '../DeleteModal'
-
+import { FaEdit, FaEye, FaTrash, FaBoxOpen, FaPlus } from 'react-icons/fa'
 
 export default function ProductTable() {
-  const {
-    products, error, pagination,
-    pageNumber, setPageNumber, pageSize, setPageSize,
-    search, setSearch, canNextPage, canPreviousPage
-  } = useAdminProduct()
+  const [deleteId, setDeleteId] = useState(null)
+  const [page, setPage] = useState(1)
+  const [search, setSearch] = useState("")
 
-  if (error) return <>{error.message}</>
+  const { products, error, isPending, pages } = useAdminProduct(page);
+  const deleteProductHook = useDeleteOneProduct()
 
-  const handlePrev = () => {
-    if (canPreviousPage) setPageNumber(prev => prev - 1)
+  const handleDelete = () => {
+    deleteProductHook.mutate(deleteId, {
+      onSuccess: () => setDeleteId(null)
+    })
   }
 
-  const handleNext = () => {
-    if (canNextPage) setPageNumber(prev => prev + 1)
-  }
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-white p-8">
+      <DeleteModal
+        isOpen={deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={handleDelete}
+        title="Delete Confirmation"
+        description="Are you sure you want to delete this product?"
+      />
 
-  const handleSearch = (e) => {
-    setPageNumber(1)
-    setSearch(e.target.value)
-  }
-   const deleteProductHook = useDeleteOneProduct()
-      const [deleteId, setDeleteId] = useState(null)
-  
-      const handleDelete = () => {
-          deleteProductHook.mutate(
-              deleteId,
-              {
-                  onSuccess: () => {
-                      setDeleteId(null)
-                  }
-              }
-          )
-      }
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div className="flex items-center gap-3">
+          <FaBoxOpen className="text-red-600 text-3xl" />
+          <h2 className="text-3xl font-extrabold text-gray-800">Product List</h2>
+        </div>
 
-
-return (
-  <div className="w-full h-screen bg-gradient-to-br from-indigo-100 to-white flex flex-col overflow-hidden">
-    <DeleteModal
-      isOpen={deleteId}
-      onClose={() => setDeleteId(null)}
-      onConfirm={handleDelete}
-      title="Delete Confirmation"
-      description="Are you sure you want to delete"
-    />
-
-    <div className="w-full h-screen bg-gradient-to-br from-indigo-100 to-white flex flex-col overflow-hidden">
-      <div className="flex-1 overflow-auto p-8">
-        <div className="bg-white shadow-2xl rounded-3xl p-8 transition-transform hover:scale-[1.01] duration-300 min-h-full">
-          
-          {/* Heading with Add Button */}
-          <div className="flex items-center justify-between gap-3 mb-6">
-            <div className="flex items-center gap-3">
-              <FaBox className="text-red-500 text-3xl" />
-              <h2 className="text-3xl font-extrabold text-gray-800">Product Table</h2>
-            </div>
-            <Link to="/admins/productss/create">
-              <button
-                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm shadow-md"
-                title="Add Product"
-              >
-                <FaPlus className="text-white" /> Add
-              </button>
-            </Link>
-          </div>
-
-          {/* Controls */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-600">Show</label>
-              <select
-                value={pageSize}
-                onChange={(e) => setPageSize(Number(e.target.value))}
-                className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                <option value={5}>5</option>
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-              </select>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-600">Search:</label>
-              <input
-                onChange={handleSearch}
-                value={search}
-                type="text"
-                placeholder="Search products..."
-                className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
-          </div>
-
-          {/* Table */}
-          <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-inner max-h-[calc(100vh-250px)]">
-            <table className="min-w-full table-auto rounded-xl overflow-hidden">
-              <thead className="bg-red-500 text-white text-sm uppercase">
-                <tr>
-                  <th className="py-4 px-6 text-left">Name</th>
-                  <th className="py-4 px-6 text-left">Price</th>
-                  <th className="py-4 px-6 text-left">Image</th>
-                  <th className="py-4 px-6 text-left">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 text-gray-700 bg-white">
-                {products.map((row) => (
-                  <tr key={row._id} className="hover:bg-indigo-50 transition duration-200">
-                    <td className="py-4 px-6 font-medium">{row.name}</td>
-                    <td className="py-4 px-6">Rs {row.price}</td>
-                    <td className="py-4 px-6">
-                      <img
-                        className="w-16 h-16 rounded-xl border shadow-sm object-cover"
-                        src={getBackendImageUrl(row.productImage)}
-                        alt={row.name}
-                      />
-                    </td>
-                    <td className="py-4 px-6">
-                      <div className="flex gap-3">
-                        <Link to={`/admins/products/${row._id}`}>
-                          <button
-                            title="View"
-                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg flex items-center gap-1 text-sm shadow-md"
-                          >
-                            <FaEye /> View
-                          </button>
-                        </Link>
-                        <Link to={`/admins/products/${row._id}/edit`}>
-                          <button
-                            title="Edit"
-                            className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-lg flex items-center gap-1 text-sm shadow-md"
-                          >
-                            <FaEdit /> Edit
-                          </button>
-                        </Link>
-                        <button
-                          title="Delete"
-                          className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg flex items-center gap-1 text-sm shadow-md"
-                          onClick={() => setDeleteId(row._id)}
-                        >
-                          <FaTrash /> Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Pagination */}
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <button
-              onClick={handlePrev}
-              disabled={!canPreviousPage}
-              className={`px-4 py-2 rounded-md text-sm font-medium shadow ${
-                canPreviousPage
-                  ? "bg-indigo-500 text-white hover:bg-indigo-600"
-                  : "bg-gray-300 text-gray-600 cursor-not-allowed"
-              }`}
-            >
-              ← Previous
+        {/* Search + Add Button */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center w-full sm:w-auto">
+          <input
+            type="text"
+            placeholder="Search by product name"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          />
+          <Link to="/admins/productss/create">
+            <button className="bg-red-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm shadow-md">
+              <FaPlus /> Add Product
             </button>
-
-            <span className="text-sm text-gray-700">
-              Page {pagination.page} of {pagination.totalPages}
-            </span>
-
-            <button
-              onClick={handleNext}
-              disabled={!canNextPage}
-              className={`px-4 py-2 rounded-md text-sm font-medium shadow ${
-                canNextPage
-                  ? "bg-indigo-500 text-white hover:bg-indigo-600"
-                  : "bg-gray-300 text-gray-600 cursor-not-allowed"
-              }`}
-            >
-              Next →
-            </button>
-          </div>
+          </Link>
         </div>
       </div>
+
+      {/* Product Cards */}
+      {isPending ? (
+        <div className="text-center text-gray-600 text-lg">Loading...</div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {products
+            .filter((product) =>
+              product.name.toLowerCase().includes(search.toLowerCase())
+            )
+            .map((product) => (
+              <div
+                key={product._id}
+                className="bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300"
+              >
+                <img
+                  src={getBackendImageUrl(product.filepath)}
+                  alt={product.name}
+                  className="w-full h-56 object-cover"
+                />
+                <div className="p-4 space-y-1">
+                  <h3 className="text-lg font-bold text-gray-800">{product.name}</h3>
+                  <p className="text-sm text-gray-600">Price: Rs. {product.price}</p>
+                  <p className="text-sm text-gray-600">Category: {product.categoryId?.name || 'N/A'}</p>
+                  <p className="text-sm text-gray-600">Seller: {product.sellerId?.name || 'N/A'}</p>
+                  
+                  {/* NEW: Description and Stock */}
+                  <p className="text-sm text-gray-600">Description: {product.description || 'No description'}</p>
+                  <p className="text-sm text-gray-600">Stock: {product.stock != null ? product.stock : 'N/A'}</p>
+                </div>
+
+                {/* Actions */}
+                <div className="flex justify-around items-center p-3 border-t text-gray-600">
+                  <Link to={`/admins/productss/${product._id}`} title="View">
+                    <FaEye className="hover:text-blue-600 cursor-pointer" />
+                  </Link>
+                  <Link to={`/admins/productss/${product._id}/edit`} title="Edit">
+                    <FaEdit className="hover:text-yellow-500 cursor-pointer" />
+                  </Link>
+                  <FaTrash
+                    title="Delete"
+                    onClick={() => setDeleteId(product._id)}
+                    className="hover:text-red-600 cursor-pointer"
+                  />
+                </div>
+              </div>
+            ))}
+        </div>
+      )}
+
+      {/* Pagination */}
+      <div className="flex justify-center items-center gap-2 mt-10">
+        <button
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          disabled={page === 1}
+          className={`px-4 py-2 rounded-lg ${page === 1 ? 'bg-gray-300' : 'bg-indigo-500 text-white hover:bg-indigo-600'}`}
+        >
+          Prev
+        </button>
+
+        {[...Array(pages)].map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setPage(i + 1)}
+            className={`px-4 py-2 rounded-lg ${page === i + 1 ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          onClick={() => setPage((prev) => Math.min(prev + 1, pages))}
+          disabled={page === pages}
+          className={`px-4 py-2 rounded-lg ${page === pages ? 'bg-gray-300' : 'bg-indigo-500 text-white hover:bg-indigo-600'}`}
+        >
+          Next
+        </button>
+      </div>
     </div>
-  </div>
-);
+  )
 }
+
+
+// import React, { useState } from 'react'
+// import { useAdminProduct, useDeleteOneProduct } from '../../hooks/admin/useAdminProduct'
+// import { getBackendImageUrl } from '../../utils/backend-image'
+// import { Link } from 'react-router-dom'
+// import DeleteModal from '../DeleteModal'
+// import { FaEdit, FaEye, FaTrash, FaBoxOpen, FaPlus } from 'react-icons/fa'
+
+// export default function ProductTable() {
+//   const { products, error, isPending, pages } = useAdminProduct()
+//   const deleteProductHook = useDeleteOneProduct()
+//   const [deleteId, setDeleteId] = useState(null)
+//   const [page, setPage] = useState(1)
+//   const [search, setSearch] = useState("")
+
+
+//   const handleDelete = () => {
+//     deleteProductHook.mutate(deleteId, {
+//       onSuccess: () => setDeleteId(null)
+//     })
+//   }
+
+//   return (
+//   <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-white p-8">
+//     <DeleteModal
+//       isOpen={deleteId}
+//       onClose={() => setDeleteId(null)}
+//       onConfirm={handleDelete}
+//       title="Delete Confirmation"
+//       description="Are you sure you want to delete this product?"
+//     />
+
+//     {/* Header */}
+//     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+//       <div className="flex items-center gap-3">
+//         <FaBoxOpen className="text-red-600 text-3xl" />
+//         <h2 className="text-3xl font-extrabold text-gray-800">Product List</h2>
+//       </div>
+
+//       {/* Search + Add Button */}
+//       <div className="flex flex-col sm:flex-row gap-3 sm:items-center w-full sm:w-auto">
+//         <input
+//           type="text"
+//           placeholder="Search by product name"
+//           value={search}
+//           onChange={(e) => setSearch(e.target.value)}
+//           className="px-4 py-2 border border-gray-300 rounded-md shadow-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+//         />
+//         <Link to="/admins/productss/create">
+//           <button className="bg-red-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm shadow-md">
+//             <FaPlus /> Add Product
+//           </button>
+//         </Link>
+//       </div>
+//     </div>
+
+//     {/* Product Cards */}
+//     {isPending ? (
+//       <div className="text-center text-gray-600 text-lg">Loading...</div>
+//     ) : (
+//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+//         {products
+//           .filter((product) =>
+//             product.name.toLowerCase().includes(search.toLowerCase())
+//           )
+//           .map((product) => (
+//             <div
+//               key={product._id}
+//               className="bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300"
+//             >
+//               <img
+//                 src={getBackendImageUrl(product.filepath)}
+//                 alt={product.name}
+//                 className="w-full h-56 object-cover"
+//               />
+//               <div className="p-4 space-y-1">
+//                 <h3 className="text-lg font-bold text-gray-800">{product.name}</h3>
+//                 <p className="text-sm text-gray-600">Price: Rs. {product.price}</p>
+//                 <p className="text-sm text-gray-600">Category: {product.categoryId?.name || 'N/A'}</p>
+//                 <p className="text-sm text-gray-600">Seller: {product.sellerId?.name || 'N/A'}</p>
+//               </div>
+
+//               {/* Actions */}
+//               <div className="flex justify-around items-center p-3 border-t text-gray-600">
+//                 <Link to={`/admins/productss/${product._id}`} title="View">
+//                   <FaEye className="hover:text-blue-600 cursor-pointer" />
+//                 </Link>
+//                 <Link to={`/admins/productss/${product._id}/edit`} title="Edit">
+//                   <FaEdit className="hover:text-yellow-500 cursor-pointer" />
+//                 </Link>
+//                 <FaTrash
+//                   title="Delete"
+//                   onClick={() => setDeleteId(product._id)}
+//                   className="hover:text-red-600 cursor-pointer"
+//                 />
+//               </div>
+//             </div>
+//           ))}
+//       </div>
+//     )}
+
+//     {/* Pagination */}
+//     <div className="flex justify-center items-center gap-2 mt-10">
+//       <button
+//         onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+//         disabled={page === 1}
+//         className={`px-4 py-2 rounded-lg ${page === 1 ? 'bg-gray-300' : 'bg-indigo-500 text-white hover:bg-indigo-600'}`}
+//       >
+//         Prev
+//       </button>
+
+//       {[...Array(pages)].map((_, i) => (
+//         <button
+//           key={i}
+//           onClick={() => setPage(i + 1)}
+//           className={`px-4 py-2 rounded-lg ${page === i + 1 ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
+//         >
+//           {i + 1}
+//         </button>
+//       ))}
+
+//       <button
+//         onClick={() => setPage((prev) => Math.min(prev + 1, pages))}
+//         disabled={page === pages}
+//         className={`px-4 py-2 rounded-lg ${page === pages ? 'bg-gray-300' : 'bg-indigo-500 text-white hover:bg-indigo-600'}`}
+//       >
+//         Next
+//       </button>
+//     </div>
+//   </div>
+// )
+// }
