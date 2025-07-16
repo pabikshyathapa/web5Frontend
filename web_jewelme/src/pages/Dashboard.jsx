@@ -1,59 +1,96 @@
-import React, { useEffect, useState } from 'react'
-import { fetchAllProducts } from '../api/publicProductApi'
-import { getBackendImageUrl } from '../utils/backend-image'
-import { FaHeart, FaUserCircle, FaShoppingBag, FaInstagram, FaFacebook, FaTiktok } from 'react-icons/fa'
-import { NavLink, Link, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import React, { useEffect, useState } from "react";
+import { fetchAllProducts } from "../api/publicProductApi";
+import { getBackendImageUrl } from "../utils/backend-image";
+import {
+  FaHeart,
+  FaUserCircle,
+  FaShoppingBag,
+  FaInstagram,
+  FaFacebook,
+  FaTiktok,
+} from "react-icons/fa";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useCart } from "./cartContext";
+import CartDrawer from "../components/cartDrawer";
 
 export default function UserProductList() {
-  const [products, setProducts] = useState([])
-  const [favorites, setFavorites] = useState({}) // Track favorited products by id
-  const navigate = useNavigate()
+  const { addToCart } = useCart();
+  const [products, setProducts] = useState([]);
+  const [favorites, setFavorites] = useState({}); // Track favorited products by id
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAllProducts()
-      .then(res => setProducts(res.data))
-      .catch(err => console.error("Error fetching products:", err))
-  }, [])
+      .then((res) => setProducts(res.data))
+      .catch((err) => console.error("Error fetching products:", err));
+  }, []);
+  const [isCartOpen, setCartOpen] = useState(false);
 
+  const toggleDrawer = () => {
+    setCartOpen((prev) => !prev);
+  };
   // Toggle favorite for product id
   const toggleFavorite = (productId) => {
-    setFavorites(prev => ({
+    setFavorites((prev) => ({
       ...prev,
-      [productId]: !prev[productId]
-    }))
-  }
+      [productId]: !prev[productId],
+    }));
+  };
 
   return (
     <div className="font-serif">
       {/* Header */}
-      <header className="flex justify-between items-center p-4 border-b" style={{ backgroundColor: '#FFFEF9' }}>
+      <header
+        className="flex justify-between items-center p-4 border-b"
+        style={{ backgroundColor: "#FFFEF9" }}
+      >
         <div className="w-32">
-          <img src="/images/splash.png" alt="JewelMe Logo" className="w-full h-auto" />
+          <img
+            src="/images/splash.png"
+            alt="JewelMe Logo"
+            className="w-full h-auto"
+          />
         </div>
 
         <nav className="space-x-6 text-sm">
-          {['/', '/shop', '/pages', '/about'].map((path, idx) => (
+          {["/", "/shop", "/pages", "/about"].map((path, idx) => (
             <NavLink
               key={path}
               to={path}
               className={({ isActive }) =>
-                isActive ? 'text-red-500' : 'text-black hover:text-red-500 transition-colors duration-300'
+                isActive
+                  ? "text-red-500"
+                  : "text-black hover:text-red-500 transition-colors duration-300"
               }
             >
-              {['Home', 'Shop', 'Pages', 'About us'][idx]}
+              {["Home", "Shop", "Pages", "About us"][idx]}
             </NavLink>
           ))}
         </nav>
 
         <div className="flex items-center gap-4 text-2xl">
-          <Link to="/profile" title="Profile" className="text-red-500 hover:text-black transition-colors duration-200">
+          <Link
+            to="/profile"
+            title="Profile"
+            className="text-red-500 hover:text-black transition-colors duration-200"
+          >
             <FaUserCircle />
           </Link>
-          <Link to="/cart" title="Cart" className="text-red-500 hover:text-black transition-colors duration-200">
+          <Link
+            to="#"
+            title="Bag"
+            onClick={toggleDrawer}
+            className="text-red-500 hover:text-black transition-colors duration-200"
+          >
             <FaShoppingBag />
           </Link>
-          <Link to="/wishlist" title="Wishlist" className="text-red-500 hover:text-black transition-colors duration-200">
+
+          <Link
+            to="/wishlist"
+            title="Wishlist"
+            className="text-red-500 hover:text-black transition-colors duration-200"
+          >
             <FaHeart />
           </Link>
         </div>
@@ -70,11 +107,13 @@ export default function UserProductList() {
 
       {/* Product Grid */}
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white px-6 py-12">
-        <h1 className="text-4xl font-extrabold text-center text-indigo-700 mb-10">Shop Products</h1>
+        <h1 className="text-4xl font-extrabold text-center text-indigo-700 mb-10">
+          Shop Products
+        </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {products.map(product => {
-            const isFavorited = favorites[product._id] || false
+          {products.map((product) => {
+            const isFavorited = favorites[product._id] || false;
 
             return (
               <div
@@ -84,16 +123,19 @@ export default function UserProductList() {
               >
                 {/* Favorite Icon */}
                 <button
-  className={`absolute top-4 right-4 z-10 transition duration-300
-    ${isFavorited ? "text-red-500" : "text-gray-300 group-hover:text-red-400"}`}
-  onClick={(e) => {
-    e.stopPropagation()
-    toggleFavorite(product._id)
-  }}
->
-  <FaHeart size={14} />
-</button>
-
+                  className={`absolute top-3 right-3 z-10 bg-white p-2 rounded-full shadow-lg transition-colors duration-300
+                 ${
+                   isFavorited
+                     ? "text-red-500"
+                     : "text-gray-400 hover:text-red-500"
+                 }`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFavorite(product._id);
+                  }}
+                >
+                  <FaHeart size={18} /> {/* Increased heart size */}
+                </button>
 
                 {/* Product Image */}
                 <img
@@ -104,26 +146,45 @@ export default function UserProductList() {
 
                 {/* Product Info */}
                 <div className="p-5 space-y-2">
-                  <h3 className="text-xl font-bold text-gray-800">{product.name}</h3>
+                  <h3 className="text-xl font-bold text-gray-800">
+                    {product.name}
+                  </h3>
                   <p className="text-md text-gray-600">Rs. {product.price}</p>
-                  <p className="text-sm text-gray-500">Category: {product.categoryId?.name}</p>
-                  <p className="text-sm text-gray-500">In Stock: {product.stock}</p>
-                  <p className="text-sm text-gray-500 truncate">{product.description || "No description available"}</p>
+                  <p className="text-sm text-gray-500">
+                    Category: {product.categoryId?.name}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    In Stock: {product.stock}
+                  </p>
+                  <p className="text-sm text-gray-500 truncate">
+                    {product.description || "No description available"}
+                  </p>
 
                   <div className="pt-3">
-                    <button
-                      className="w-full bg-red-500 text-white font-medium py-2 rounded-lg hover:bg-red-600 transition duration-300"
+                    <motion.button
+                      whileTap={{ scale: 0.12, rotate: -12 }} // tap feedback motion
+                      className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold py-2 rounded-xl shadow-md hover:from-pink-600 hover:to-red-600 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-pink-300"
                       onClick={(e) => {
-                        e.stopPropagation()
-                        alert('Added to cart or Buy Now clicked!')
+                        e.stopPropagation();
+                        addToCart(product); // your logic here
                       }}
                     >
-                      Buy Now
-                    </button>
+                      Add to Bag
+                    </motion.button>
+                    {/* <button
+                      className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold py-2 rounded-xl shadow-md hover:from-pink-600 hover:to-red-600 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-pink-300"
+                     onClick={(e) => {
+                     e.stopPropagation();
+                     addToCart(product);
+                      }}
+
+                    >
+                      Add to Bag
+                    </button> */}
                   </div>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </div>
@@ -131,16 +192,21 @@ export default function UserProductList() {
       {/* Footer */}
       <footer className="bg-red-300 text-black px-8 py-16 grid grid-cols-1 md:grid-cols-3 gap-12 text-sm">
         <div>
-          <h4 className="text-lg font-bold mb-3 tracking-wide">Stay Connected</h4>
+          <h4 className="text-lg font-bold mb-3 tracking-wide">
+            Stay Connected
+          </h4>
           <p className="leading-relaxed">
-            Discover exclusive offers, early access to new collections, style inspiration, and personalized recommendations just for you.
+            Discover exclusive offers, early access to new collections, style
+            inspiration, and personalized recommendations just for you.
           </p>
         </div>
 
         <div>
           <ul className="space-y-2">
             <li className="hover:underline cursor-pointer">Help</li>
-            <li className="hover:underline cursor-pointer">Shipping and Return</li>
+            <li className="hover:underline cursor-pointer">
+              Shipping and Return
+            </li>
             <li className="hover:underline cursor-pointer">Guide</li>
             <li className="hover:underline cursor-pointer">Our Story</li>
           </ul>
@@ -158,15 +224,15 @@ export default function UserProductList() {
           <p className="mt-2 text-xs font-bold text-black">@Jewelmeeveryday</p>
         </div>
       </footer>
+      <CartDrawer isOpen={isCartOpen} onClose={toggleDrawer} />
     </div>
-  )
+  );
 }
-
 
 // import React, { useContext, useRef } from 'react';
 // import { motion } from 'framer-motion';
 // import { FaInstagram, FaFacebook, FaTiktok, FaHeart, FaChevronRight,
-  //  FaUserCircle, FaShoppingBag, FaChevronLeft } from 'react-icons/fa';
+//  FaUserCircle, FaShoppingBag, FaChevronLeft } from 'react-icons/fa';
 // import { Link, NavLink } from 'react-router-dom';
 // import { AuthContext } from '../auth/AuthProvider';
 

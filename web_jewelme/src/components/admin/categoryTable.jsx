@@ -68,10 +68,10 @@ return (
             <tbody className="divide-y divide-gray-100 text-gray-700 bg-white">
               {categories.map((row) => (
                 <tr key={row._id} className="hover:bg-indigo-50 transition duration-200">
-                  <td className="py-4 px-6 font-medium">{row.name}</td>
+                  <td className="py-4 px-6 font-bold">{row.name}</td>
                   <td className="py-4 px-6">
                     <img
-                      className="w-16 h-16 rounded-xl border shadow-sm object-cover"
+                      className="w-24 h-24 rounded-xl border shadow-sm object-cover"
                       src={getBackendImageUrl(row.filepath)}
                       alt={row.name}
                     />

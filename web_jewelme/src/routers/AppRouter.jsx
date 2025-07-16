@@ -27,6 +27,7 @@ import AdminDashboard from '../pages/AdminDashboard'
 import UpdateProduct from '../pages/admin/UpdateProduct'
 import ViewProducts from '../pages/admin/viewProduct'
 import ProductDetails from '../pages/productDetail'
+import CartPage from '../pages/addToCart'
 
 export default function AppRouter() {
   return (
@@ -42,10 +43,9 @@ export default function AppRouter() {
           <Route path='/register' element={<Register />}></Route>
           <Route path='/dashboard' element={<Dashboard />}></Route>
           <Route path='/products/:id' element={<ProductDetails />}></Route>
-          
-          
+          <Route path="/tocart" element={<CartPage />}></Route>
 
-
+      
         </Route>
         </Route>
         <Route path='/normal/*' element={<NormalUserRoute/>}>
@@ -53,6 +53,8 @@ export default function AppRouter() {
         <Route path='cart' element={<>My Cart</>}></Route>
         <Route path='*' element={<>404 not found</>}></Route>
         </Route>
+
+        
         <Route element={<MainLayout />}>
         <Route path='/admin/*'>
         <Route path='adashboard' element={<AdminDashboard/>}></Route>

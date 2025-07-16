@@ -2,9 +2,18 @@ import { Outlet, NavLink } from "react-router-dom";
 import { AuthContext } from "../auth/AuthProvider";
 import { useContext } from "react";
 import { FaUser, FaBox, FaTags } from "react-icons/fa"; 
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminLayout() {
-    const { user, logout } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  navigate("/login"); 
+};
+
+
 
    return (
   <div className="flex h-screen bg-gray-100">

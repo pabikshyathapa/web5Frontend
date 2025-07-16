@@ -20,34 +20,67 @@ export default function LoginForm() {
       password: Yup.string().required("Password is required"),
     }),
     onSubmit: async (values) => {
-      try {
-        const response = await axios.post("http://localhost:5050/api/auth/login", {
-          email: values.email,
-          password: values.password,
-        });
+  try {
+    const response = await axios.post("http://localhost:5050/api/auth/login", {
+      email: values.email,
+      password: values.password,
+    });
 
-        if (response.data.success) {
-          // Save token and user data
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("user", JSON.stringify(response.data.data));
+    if (response.data.success) {
+      const userData = response.data.data;
+      console.log("User Data:", userData); 
 
-          setLoginError(""); 
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(userData));
 
-          toast.success("Login successful!", { position: "top-center" });
+      toast.success("Login successful!", { position: "top-center" });
 
-          // Redirect after short delay
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 800);
+      setTimeout(() => {
+        if (userData.role === "admin") {
+          navigate("/admins/categoryy");
         } else {
-          setLoginError("Invalid email or password.");
+          navigate("/dashboard");
         }
-      } catch (err) {
-        console.error("Login error:", err);
-        setLoginError("Invalid email or password.");
-      }
-    },
+      }, 800);
+    } else {
+      setLoginError("Invalid email or password.");
+    }
+  } catch (err) {
+    console.error("Login error:", err);
+    setLoginError("Invalid email or password.");
+  }
+},
   });
+
+  //   onSubmit: async (values) => {
+  //     try {
+  //       const response = await axios.post("http://localhost:5050/api/auth/login", {
+  //         email: values.email,
+  //         password: values.password,
+  //       });
+
+  //       if (response.data.success) {
+  //         // Save token and user data
+  //         localStorage.setItem("token", response.data.token);
+  //         localStorage.setItem("user", JSON.stringify(response.data.data));
+
+  //         setLoginError(""); 
+
+  //         toast.success("Login successful!", { position: "top-center" });
+
+  //         // Redirect after short delay
+  //         setTimeout(() => {
+  //           navigate("/dashboard");
+  //         }, 800);
+  //       } else {
+  //         setLoginError("Invalid email or password.");
+  //       }
+  //     } catch (err) {
+  //       console.error("Login error:", err);
+  //       setLoginError("Invalid email or password.");
+  //     }
+  //   },
+  // });
 
   return (
     <div className="flex min-h-screen bg-white">
