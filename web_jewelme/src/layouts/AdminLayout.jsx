@@ -87,7 +87,7 @@ export default function AdminLayout() {
 
       {/* Footer */}
       <footer className="text-center py-4 text-sm text-gray-500 border-t bg-white">
-        © 2025 My App. All rights reserved.
+        © 2025 JewelMe. All rights reserved.
       </footer>
     </div>
   </div>

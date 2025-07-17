@@ -69,171 +69,159 @@ export default function CreateProduct() {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-white flex items-center justify-center p-6">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Create Product</h2>
-        <form onSubmit={formik.handleSubmit} className="space-y-5">
-          {/* Product Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Product Name
-            </label>
-            <input
-              name="name"
-              type="text"
-              onChange={formik.handleChange}
-              value={formik.values.name}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-              placeholder="Enter product name"
-            />
-            {formik.touched.name && formik.errors.name && (
-              <p className="text-sm text-red-500 mt-1">{formik.errors.name}</p>
-            )}
-          </div>
-
-          {/* Price */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Price
-            </label>
-            <input
-              name="price"
-              type="number"
-              onChange={formik.handleChange}
-              value={formik.values.price}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-              placeholder="Enter price"
-            />
-            {formik.touched.price && formik.errors.price && (
-              <p className="text-sm text-red-500 mt-1">{formik.errors.price}</p>
-            )}
-          </div>
-
-          {/* Category Select */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Category
-            </label>
-            <select
-              name="categoryId"
-              onChange={formik.handleChange}
-              value={formik.values.categoryId}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            >
-              <option value="">Select category</option>
-              {categories.map((cat) => (
-                <option key={cat._id} value={cat._id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-            {formik.touched.categoryId && formik.errors.categoryId && (
-              <p className="text-sm text-red-500 mt-1">{formik.errors.categoryId}</p>
-            )}
-          </div>
-
-          {/* Seller Select */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Seller
-            </label>
-            <select
-              name="sellerId"
-              onChange={formik.handleChange}
-              value={formik.values.sellerId}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            >
-              <option value="">Select seller</option>
-              {sellers.map((seller) => (
-                <option key={seller._id} value={seller._id}>
-                  {seller.name || seller.email || seller._id}
-                </option>
-              ))}
-            </select>
-            {formik.touched.sellerId && formik.errors.sellerId && (
-              <p className="text-sm text-red-500 mt-1">{formik.errors.sellerId}</p>
-            )}
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
-            <textarea
-              name="description"
-              onChange={formik.handleChange}
-              value={formik.values.description}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-              placeholder="Enter product description"
-              rows={3}
-            />
-            {formik.touched.description && formik.errors.description && (
-              <p className="text-sm text-red-500 mt-1">{formik.errors.description}</p>
-            )}
-          </div>
-
-          {/* Stock */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Stock
-            </label>
-            <input
-              name="stock"
-              type="number"
-              onChange={formik.handleChange}
-              value={formik.values.stock}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-              placeholder="Enter stock quantity"
-              min={0}
-            />
-            {formik.touched.stock && formik.errors.stock && (
-              <p className="text-sm text-red-500 mt-1">{formik.errors.stock}</p>
-            )}
-          </div>
-
-          {/* Product Image */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Product Image
-            </label>
-            <input
-              name="image"
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.currentTarget.files[0]
-                if (file) formik.setFieldValue("image", file)
-              }}
-              className="w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-red-500 file:text-white hover:file:bg-indigo-600"
-            />
-            {formik.touched.image && formik.errors.image && (
-              <p className="text-sm text-red-500 mt-1">{formik.errors.image}</p>
-            )}
-          </div>
-
-          {/* Preview */}
-          {formik.values.image && (
-            <div className="mt-4">
-              <img
-                src={URL.createObjectURL(formik.values.image)}
-                alt="Preview"
-                className="w-32 h-32 object-cover rounded-md border shadow"
-              />
-            </div>
-          )}
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isPending}
-            className="w-full bg-red-500 text-white py-2 px-4 rounded-md shadow hover:bg-indigo-700 transition duration-200 disabled:opacity-50"
-          >
-            {isPending ? "Saving..." : "Create Product"}
-          </button>
-        </form>
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-indigo-100 flex items-center justify-center px-4 py-12">
+  <div className="bg-white shadow-2xl rounded-3xl w-full max-w-2xl p-10">
+    <h2 className="text-3xl font-bold text-gray-800 mb-8 border-b pb-2">
+      Add New Product
+    </h2>
+    <form onSubmit={formik.handleSubmit} className="space-y-6">
+      
+      {/* Product Name */}
+      <div>
+        <label className="text-sm font-medium text-gray-700 block mb-1">Product Name</label>
+        <input
+          name="name"
+          type="text"
+          onChange={formik.handleChange}
+          value={formik.values.name}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        />
+        {formik.touched.name && formik.errors.name && (
+          <p className="text-xs text-red-500 mt-1">{formik.errors.name}</p>
+        )}
       </div>
-    </div>
+
+      {/* Price */}
+      <div>
+        <label className="text-sm font-medium text-gray-700 block mb-1">Price</label>
+        <input
+          name="price"
+          type="number"
+          onChange={formik.handleChange}
+          value={formik.values.price}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        />
+        {formik.touched.price && formik.errors.price && (
+          <p className="text-xs text-red-500 mt-1">{formik.errors.price}</p>
+        )}
+      </div>
+
+      {/* Category Select */}
+      <div>
+        <label className="text-sm font-medium text-gray-700 block mb-1">Category</label>
+        <select
+          name="categoryId"
+          onChange={formik.handleChange}
+          value={formik.values.categoryId}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        >
+          <option value="">Select category</option>
+          {categories.map((cat) => (
+            <option key={cat._id} value={cat._id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+        {formik.touched.categoryId && formik.errors.categoryId && (
+          <p className="text-xs text-red-500 mt-1">{formik.errors.categoryId}</p>
+        )}
+      </div>
+
+      {/* Seller Select */}
+      <div>
+        <label className="text-sm font-medium text-gray-700 block mb-1">Seller</label>
+        <select
+          name="sellerId"
+          onChange={formik.handleChange}
+          value={formik.values.sellerId}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        >
+          <option value="">Select seller</option>
+          {sellers.map((seller) => (
+            <option key={seller._id} value={seller._id}>
+              {seller.name || seller.email || seller._id}
+            </option>
+          ))}
+        </select>
+        {formik.touched.sellerId && formik.errors.sellerId && (
+          <p className="text-xs text-red-500 mt-1">{formik.errors.sellerId}</p>
+        )}
+      </div>
+
+      {/* Description */}
+      <div>
+        <label className="text-sm font-medium text-gray-700 block mb-1">Description</label>
+        <textarea
+          name="description"
+          onChange={formik.handleChange}
+          value={formik.values.description}
+          rows={3}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          placeholder="Describe your product in detail..."
+        />
+        {formik.touched.description && formik.errors.description && (
+          <p className="text-xs text-red-500 mt-1">{formik.errors.description}</p>
+        )}
+      </div>
+
+      {/* Stock */}
+      <div>
+        <label className="text-sm font-medium text-gray-700 block mb-1">Stock</label>
+        <input
+          name="stock"
+          type="number"
+          onChange={formik.handleChange}
+          value={formik.values.stock}
+          min={0}
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          placeholder="e.g., 25"
+        />
+        {formik.touched.stock && formik.errors.stock && (
+          <p className="text-xs text-red-500 mt-1">{formik.errors.stock}</p>
+        )}
+      </div>
+
+      {/* Image Upload */}
+      <div>
+        <label className="text-sm font-medium text-gray-700 block mb-1">Product Image</label>
+        <input
+          name="image"
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.currentTarget.files[0]
+            if (file) formik.setFieldValue("image", file)
+          }}
+          className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-red-500 file:text-white hover:file:bg-indigo-700"
+        />
+        {formik.touched.image && formik.errors.image && (
+          <p className="text-xs text-red-500 mt-1">{formik.errors.image}</p>
+        )}
+      </div>
+
+      {/* Preview */}
+      {formik.values.image && (
+        <div className="mt-4">
+          <img
+            src={URL.createObjectURL(formik.values.image)}
+            alt="Preview"
+            className="w-32 h-32 object-cover rounded-lg border shadow"
+          />
+        </div>
+      )}
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        disabled={isPending}
+        className="w-full bg-red-500 hover:bg-indigo-500 text-white font-medium py-2 rounded-lg transition duration-200 disabled:opacity-50"
+      >
+        {isPending ? "Saving..." : "Create Product"}
+      </button>
+    </form>
+  </div>
+</div>
+
   )
 }
 

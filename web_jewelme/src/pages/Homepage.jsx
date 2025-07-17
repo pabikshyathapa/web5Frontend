@@ -53,7 +53,7 @@ export default function JewelMeHome() {
                 isActive ? 'text-red-500' : 'text-black hover:text-red-500 transition-colors duration-300'
               }
             >
-              {['Home', 'Shop', 'Pages', 'About us'][idx]}
+              {["Home", "Necklaces", "Hoops", "Rings", "Bracelets", "Watches", "Traditionals"][idx]}
             </NavLink>
           ))}
         </nav>
@@ -219,6 +219,9 @@ Discover exclusive offers, early access to new collections, style inspiration, a
           <p className="mt-2 text-xs font-bold text-black">@Jewelmeeveryday</p>
         </div>
       </footer>
+      <div className="bg-red-300 text-center text-sm py-4 text-black">
+  © 2025 JewelMe. All rights reserved.
+</div>
     </div>
   );
 }

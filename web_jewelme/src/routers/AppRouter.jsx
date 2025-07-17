@@ -28,6 +28,14 @@ import UpdateProduct from '../pages/admin/UpdateProduct'
 import ViewProducts from '../pages/admin/viewProduct'
 import ProductDetails from '../pages/productDetail'
 import CartPage from '../pages/addToCart'
+import WishlistPage from '../pages/wishListPage'
+import ProfilePage from '../pages/profilePage'
+import NecklacesPage from '../pages/sortyby/Necklaces'
+import HoopsPage from '../pages/sortyby/Hoops'
+import RingsPage from '../pages/sortyby/Rings'
+import BraceletsPage from '../pages/sortyby/Bracelets'
+import WatchesPage from '../pages/sortyby/Watches'
+import TraditionalsPage from '../pages/sortyby/Traditionals'
 
 export default function AppRouter() {
   return (
@@ -42,10 +50,17 @@ export default function AppRouter() {
           <Route path="/login" element={<Login />}></Route>
           <Route path='/register' element={<Register />}></Route>
           <Route path='/dashboard' element={<Dashboard />}></Route>
+          <Route path='/profile' element={<ProfilePage />}></Route>
           <Route path='/products/:id' element={<ProductDetails />}></Route>
           <Route path="/tocart" element={<CartPage />}></Route>
+          <Route path="/wishlist" element={<WishlistPage />}></Route>
+          <Route path="/necklaces" element={< NecklacesPage/>}></Route>
+          <Route path="/hoops" element={< HoopsPage/>}></Route>
+          <Route path="/rings" element={< RingsPage/>}></Route>
+          <Route path="/bracelets" element={< BraceletsPage/>}></Route>
+          <Route path="/watches" element={< WatchesPage/>}></Route>
+          <Route path="/traditionals" element={<TraditionalsPage/>}></Route>
 
-      
         </Route>
         </Route>
         <Route path='/normal/*' element={<NormalUserRoute/>}>

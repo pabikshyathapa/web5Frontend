@@ -8,35 +8,42 @@ import {
   FaInstagram,
   FaFacebook,
   FaTiktok,
+  FaSearch,
 } from "react-icons/fa";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useCart } from "./cartContext";
 import CartDrawer from "../components/cartDrawer";
+import { useWishlist } from "./wishlistContent";
 
-export default function UserProductList() {
+export default function Dashboard() {
+  const storedUser = JSON.parse(localStorage.getItem("user")); // or use your auth logic
+  const userName = storedUser?.name || "Guest";
+
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [products, setProducts] = useState([]);
-  const [favorites, setFavorites] = useState({}); // Track favorited products by id
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const [isCartOpen, setCartOpen] = useState(false);
+
+  const toggleDrawer = () => setCartOpen((prev) => !prev);
+
+  const toggleFavorite = (product) => {
+    const alreadyFavorited = isInWishlist(product._id);
+    if (alreadyFavorited) {
+      removeFromWishlist(product._id);
+    } else {
+      addToWishlist(product);
+    }
+  };
 
   useEffect(() => {
     fetchAllProducts()
       .then((res) => setProducts(res.data))
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
-  const [isCartOpen, setCartOpen] = useState(false);
-
-  const toggleDrawer = () => {
-    setCartOpen((prev) => !prev);
-  };
-  // Toggle favorite for product id
-  const toggleFavorite = (productId) => {
-    setFavorites((prev) => ({
-      ...prev,
-      [productId]: !prev[productId],
-    }));
-  };
 
   return (
     <div className="font-serif">
@@ -54,7 +61,15 @@ export default function UserProductList() {
         </div>
 
         <nav className="space-x-6 text-sm">
-          {["/", "/shop", "/pages", "/about"].map((path, idx) => (
+          {[
+            "/",
+            "/necklaces",
+            "/hoops",
+            "/rings",
+            "/bracelets",
+            "/watches",
+            "/traditionals",
+          ].map((path, idx) => (
             <NavLink
               key={path}
               to={path}
@@ -64,32 +79,115 @@ export default function UserProductList() {
                   : "text-black hover:text-red-500 transition-colors duration-300"
               }
             >
-              {["Home", "Shop", "Pages", "About us"][idx]}
+              {
+                [
+                  "Home",
+                  "Necklaces",
+                  "Hoops",
+                  "Rings",
+                  "Bracelets",
+                  "Watches",
+                  "Traditionals",
+                ][idx]
+              }
             </NavLink>
           ))}
         </nav>
 
-        <div className="flex items-center gap-4 text-2xl">
+        <div className="flex items-center gap-3 text-xl">
+          {/* Search */}
+          <div className="relative">
+            <button
+              onClick={() => setShowSearchDropdown((prev) => !prev)}
+              title="Search"
+              className="text-red-500 hover:text-black transition-colors duration-200 p-1"
+            >
+              <FaSearch size={18} />
+            </button>
+
+            {showSearchDropdown && (
+              <div className="absolute right-0 mt-2 bg-white border rounded-lg shadow-lg z-50 p-4 w-64">
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-3 py-2 border rounded mb-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
+                />
+
+                <div className="border-t pt-2">
+                  <p className="text-xs font-semibold mb-1 text-gray-500">
+                    Categories
+                  </p>
+                  {[
+                    { label: "Necklaces", path: "/necklaces" },
+                    { label: "Hoops", path: "/hoops" },
+                    { label: "Rings", path: "/rings" },
+                    { label: "Bracelets", path: "/bracelets" },
+                    { label: "Watches", path: "/watches" },
+                    { label: "Traditionals", path: "/traditionals" },
+                  ].map((item) => (
+                    <Link
+                      key={item.label}
+                      to={item.path}
+                      className="block px-2 py-1 text-sm text-gray-700 hover:bg-red-100 rounded"
+                      onClick={() => setShowSearchDropdown(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+
+                {searchTerm && (
+                  <div className="border-t mt-2 pt-2">
+                    <p className="text-xs font-semibold text-gray-500 mb-1">
+                      Results
+                    </p>
+                    {products
+                      .filter((product) =>
+                        product.name
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase())
+                      )
+                      .slice(0, 5)
+                      .map((product) => (
+                        <div
+                          key={product._id}
+                          className="cursor-pointer px-2 py-1 text-sm hover:bg-gray-100 rounded"
+                          onClick={() => {
+                            navigate(`/products/${product._id}`);
+                            setShowSearchDropdown(false);
+                          }}
+                        >
+                          {product.name}
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           <Link
             to="/profile"
             title="Profile"
-            className="text-red-500 hover:text-black transition-colors duration-200"
+            className="text-red-500 hover:text-black"
           >
             <FaUserCircle />
           </Link>
+          <span className="text-sm text-black font-normal">Hi, {userName}</span>
+
           <Link
             to="#"
             title="Bag"
             onClick={toggleDrawer}
-            className="text-red-500 hover:text-black transition-colors duration-200"
+            className="text-red-500 hover:text-black"
           >
             <FaShoppingBag />
           </Link>
-
           <Link
             to="/wishlist"
             title="Wishlist"
-            className="text-red-500 hover:text-black transition-colors duration-200"
+            className="text-red-500 hover:text-black"
           >
             <FaHeart />
           </Link>
@@ -107,13 +205,13 @@ export default function UserProductList() {
 
       {/* Product Grid */}
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white px-6 py-12">
-        <h1 className="text-4xl font-extrabold text-center text-indigo-700 mb-10">
+        <h1 className="text-4xl font-extrabold text-center text-red-500 mb-10">
           Shop Products
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {products.map((product) => {
-            const isFavorited = favorites[product._id] || false;
+            const isFavorited = isInWishlist(product._id);
 
             return (
               <div
@@ -123,18 +221,17 @@ export default function UserProductList() {
               >
                 {/* Favorite Icon */}
                 <button
-                  className={`absolute top-3 right-3 z-10 bg-white p-2 rounded-full shadow-lg transition-colors duration-300
-                 ${
-                   isFavorited
-                     ? "text-red-500"
-                     : "text-gray-400 hover:text-red-500"
-                 }`}
+                  className={`absolute top-3 right-3 z-10 bg-white p-2 rounded-full shadow-lg transition-colors duration-300 ${
+                    isFavorited
+                      ? "text-red-500"
+                      : "text-gray-400 hover:text-red-500"
+                  }`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    toggleFavorite(product._id);
+                    toggleFavorite(product);
                   }}
                 >
-                  <FaHeart size={18} /> {/* Increased heart size */}
+                  <FaHeart size={18} />
                 </button>
 
                 {/* Product Image */}
@@ -162,25 +259,15 @@ export default function UserProductList() {
 
                   <div className="pt-3">
                     <motion.button
-                      whileTap={{ scale: 0.12, rotate: -12 }} // tap feedback motion
+                      whileTap={{ scale: 0.15 }}
                       className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold py-2 rounded-xl shadow-md hover:from-pink-600 hover:to-red-600 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-pink-300"
                       onClick={(e) => {
                         e.stopPropagation();
-                        addToCart(product); // your logic here
+                        addToCart(product);
                       }}
                     >
                       Add to Bag
                     </motion.button>
-                    {/* <button
-                      className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold py-2 rounded-xl shadow-md hover:from-pink-600 hover:to-red-600 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-pink-300"
-                     onClick={(e) => {
-                     e.stopPropagation();
-                     addToCart(product);
-                      }}
-
-                    >
-                      Add to Bag
-                    </button> */}
                   </div>
                 </div>
               </div>
@@ -224,6 +311,9 @@ export default function UserProductList() {
           <p className="mt-2 text-xs font-bold text-black">@Jewelmeeveryday</p>
         </div>
       </footer>
+      <div className="bg-red-300 text-center text-sm py-4 text-black">
+        © 2025 JewelMe. All rights reserved.
+      </div>
       <CartDrawer isOpen={isCartOpen} onClose={toggleDrawer} />
     </div>
   );

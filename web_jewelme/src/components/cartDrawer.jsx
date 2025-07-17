@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useCart } from "../pages/cartContext";
 import { getBackendImageUrl } from "../utils/backend-image";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 export default function CartDrawer({ isOpen, onClose }) {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
   const [selectedItems, setSelectedItems] = useState([]);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const [userName, setUserName] = useState("Your");
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser?.name) {
+      setUserName(storedUser.name.split(" ")[0]);
+    }
+  }, []);
 
   useEffect(() => {
     setSelectedItems(cartItems.map((item) => item._id));
@@ -41,7 +49,7 @@ export default function CartDrawer({ isOpen, onClose }) {
       </button>
 
       <div className="p-6 overflow-y-auto h-full pb-28">
-        <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
+        <h2 className="text-3xl font-semibold mb-8">{userName}'s Bag</h2>
 
         {cartItems.length === 0 ? (
           <p className="text-gray-600">Your cart is empty.</p>
@@ -61,12 +69,12 @@ export default function CartDrawer({ isOpen, onClose }) {
                 <img
                   src={getBackendImageUrl(item.filepath)}
                   alt={item.name}
-                  className="w-14 h-14 object-cover rounded cursor-pointer"
-                  onClick={() => navigate(`/products/${item._id}`)} 
+                  className="w-20 h-25 object-cover rounded cursor-pointer"
+                  onClick={() => navigate(`/products/${item._id}`)}
                 />
                 <div
                   className="flex-1 cursor-pointer"
-                  onClick={() => navigate(`/products/${item._id}`)} 
+                  onClick={() => navigate(`/products/${item._id}`)}
                 >
                   <p className="font-semibold">{item.name}</p>
                   <p className="text-sm text-gray-600">Rs. {item.price}</p>
@@ -114,11 +122,13 @@ export default function CartDrawer({ isOpen, onClose }) {
                 className={`mt-2 w-full py-2 rounded text-white font-semibold ${
                   selectedItems.length === 0
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-black hover:bg-gray-800"
+                    : "bg-red-500 hover:bg-gray-500"
                 }`}
                 onClick={() => {
                   alert(
-                    `Checkout for items: ${selectedItems.join(", ")}\nTotal: Rs. ${total}`
+                    `Checkout for items: ${selectedItems.join(
+                      ", "
+                    )}\nTotal: Rs. ${total}`
                   );
                 }}
               >
