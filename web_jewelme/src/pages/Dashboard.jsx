@@ -27,7 +27,15 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const [isCartOpen, setCartOpen] = useState(false);
+  // Extract bestsellers
+  const bestsellers = products.filter(
+    (product) => product.categoryId?.name?.toLowerCase() === "best sellers"
+  );
 
+  // Filter out bestsellers from all products for shop listing
+  const shopProducts = products.filter(
+    (product) => !bestsellers.some((b) => b._id === product._id)
+  );
   const toggleDrawer = () => setCartOpen((prev) => !prev);
 
   const toggleFavorite = (product) => {
@@ -68,7 +76,7 @@ export default function Dashboard() {
             "/rings",
             "/bracelets",
             "/watches",
-            "/traditionals",
+            "/bestsellers",
           ].map((path, idx) => (
             <NavLink
               key={path}
@@ -87,7 +95,7 @@ export default function Dashboard() {
                   "Rings",
                   "Bracelets",
                   "Watches",
-                  "Traditionals",
+                  "Best Sellers",
                 ][idx]
               }
             </NavLink>
@@ -119,6 +127,7 @@ export default function Dashboard() {
                     Categories
                   </p>
                   {[
+                    {label: "Best Sellers",path:"/bestsellers"},
                     { label: "Necklaces", path: "/necklaces" },
                     { label: "Hoops", path: "/hoops" },
                     { label: "Rings", path: "/rings" },
@@ -203,14 +212,14 @@ export default function Dashboard() {
         transition={{ duration: 1 }}
       />
 
-      {/* Product Grid */}
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white px-6 py-12">
-        <h1 className="text-4xl font-extrabold text-center text-red-500 mb-10">
-          Shop Products
-        </h1>
+      {/* Bestsellers Section */}
+      <div className="px-6 pt-12">
+        <h2 className="text-4xl font-bold text-center text-yellow-600 mb-8">
+          Bestsellers
+        </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {products.map((product) => {
+          {bestsellers.map((product) => {
             const isFavorited = isInWishlist(product._id);
 
             return (
@@ -219,7 +228,6 @@ export default function Dashboard() {
                 onClick={() => navigate(`/products/${product._id}`)}
                 className="relative group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer"
               >
-                {/* Favorite Icon */}
                 <button
                   className={`absolute top-3 right-3 z-10 bg-white p-2 rounded-full shadow-lg transition-colors duration-300 ${
                     isFavorited
@@ -234,22 +242,84 @@ export default function Dashboard() {
                   <FaHeart size={18} />
                 </button>
 
-                {/* Product Image */}
                 <img
                   src={getBackendImageUrl(product.filepath)}
                   alt={product.name}
                   className="w-full h-[320px] object-cover transition-transform duration-300 group-hover:scale-105"
                 />
 
-                {/* Product Info */}
                 <div className="p-5 space-y-2">
                   <h3 className="text-xl font-bold text-gray-800">
                     {product.name}
                   </h3>
                   <p className="text-md text-gray-600">Rs. {product.price}</p>
                   <p className="text-sm text-gray-500">
-                    Category: {product.categoryId?.name}
+                    In Stock: {product.stock}
                   </p>
+                  <p className="text-sm text-gray-500 truncate">
+                    {product.description || "No description available"}
+                  </p>
+
+                  <div className="pt-3">
+                    <motion.button
+                      whileTap={{ scale: 0.15 }}
+                      className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold py-2 rounded-xl shadow-md hover:from-pink-600 hover:to-red-600 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-pink-300"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(product);
+                      }}
+                    >
+                      Add to Bag
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Shop Products Section */}
+      <div className="px-6 pt-16 pb-12">
+        <h2 className="text-4xl font-bold text-center text-red-500 mb-8">
+          Shop Products
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {shopProducts.map((product) => {
+            const isFavorited = isInWishlist(product._id);
+
+            return (
+              <div
+                key={product._id}
+                onClick={() => navigate(`/products/${product._id}`)}
+                className="relative group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer"
+              >
+                <button
+                  className={`absolute top-3 right-3 z-10 bg-white p-2 rounded-full shadow-lg transition-colors duration-300 ${
+                    isFavorited
+                      ? "text-red-500"
+                      : "text-gray-400 hover:text-red-500"
+                  }`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFavorite(product);
+                  }}
+                >
+                  <FaHeart size={18} />
+                </button>
+
+                <img
+                  src={getBackendImageUrl(product.filepath)}
+                  alt={product.name}
+                  className="w-full h-[320px] object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+
+                <div className="p-5 space-y-2">
+                  <h3 className="text-xl font-bold text-gray-800">
+                    {product.name}
+                  </h3>
+                  <p className="text-md text-gray-600">Rs. {product.price}</p>
                   <p className="text-sm text-gray-500">
                     In Stock: {product.stock}
                   </p>
@@ -319,81 +389,184 @@ export default function Dashboard() {
   );
 }
 
-// import React, { useContext, useRef } from 'react';
-// import { motion } from 'framer-motion';
-// import { FaInstagram, FaFacebook, FaTiktok, FaHeart, FaChevronRight,
-//  FaUserCircle, FaShoppingBag, FaChevronLeft } from 'react-icons/fa';
-// import { Link, NavLink } from 'react-router-dom';
-// import { AuthContext } from '../auth/AuthProvider';
+// import React, { useEffect, useState } from "react";
+// import { fetchAllProducts } from "../api/publicProductApi";
+// import { getBackendImageUrl } from "../utils/backend-image";
+// import {
+//   FaHeart,
+//   FaUserCircle,
+//   FaShoppingBag,
+//   FaInstagram,
+//   FaFacebook,
+//   FaTiktok,
+//   FaSearch,
+// } from "react-icons/fa";
+// import { NavLink, Link, useNavigate } from "react-router-dom";
+// import { motion } from "framer-motion";
+// import CartDrawer from "../components/cartDrawer";
+// import { useWishlist } from "../pages/wishlistContent";
+// import { useAddToCart } from "../hooks/useCart"; //  <-- backend hook
 
-// const categories = [
-//   { name: 'Jhumka', img: '/images/jhumka1.jpg' },
-//   { name: 'Necklaces', img: '/images/necklace1.jpg' },
-//   { name: 'Hoops', img: '/images/heartear.jpg' },
-//   { name: 'Gold Rings', img: '/images/ring.jpg' },
-//   { name: 'Vintage Watch', img: '/images/watch.jpg' },
-//   { name: 'Diamond Rings', img: '/images/dia.jpg' },
-//   { name: 'Bracelets', img: '/images/bracelet2.jpg' },
-// ];
+// export default function Dashboard() {
+//   const storedUser = JSON.parse(localStorage.getItem("user"));
+//   const userId = storedUser?._id;
+//   const userName = storedUser?.name || "Guest";
 
-// const catalogImages = [
-//   '/images/bracelet2.jpg',
-//   '/images/dia.jpg',
-//   '/images/necklace3.jpg',
-//   '/images/watch.jpg',
-//   '/images/dia.jpg',
-//   '/images/necklace3.jpg',
-//   '/images/watch.jpg',
-// ];
+//   const { mutate: addToCart } = useAddToCart(); // <-- backend mutation
+//   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
-// export default function JewelMeHome() {
-//   const { user, logout } = useContext(AuthContext);
-//   const scrollRef = useRef(null);
+//   const [products, setProducts] = useState([]);
+//   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [isCartOpen, setCartOpen] = useState(false);
+//   const navigate = useNavigate();
 
-//   const scrollLeft = () => {
-//     scrollRef.current?.scrollBy({ left: -300, behavior: 'smooth' });
+//   const bestsellers = products.filter(
+//     (product) => product.categoryId?.name?.toLowerCase() === "best sellers"
+//   );
+
+//   const shopProducts = products.filter(
+//     (product) => !bestsellers.some((b) => b._id === product._id)
+//   );
+
+//   const toggleDrawer = () => setCartOpen((prev) => !prev);
+
+//   const toggleFavorite = (product) => {
+//     const alreadyFavorited = isInWishlist(product._id);
+//     alreadyFavorited
+//       ? removeFromWishlist(product._id)
+//       : addToWishlist(product);
 //   };
 
-//   const scrollRight = () => {
-//     scrollRef.current?.scrollBy({ left: 300, behavior: 'smooth' });
+//   const handleAddToCart = (product) => {
+//   const user = JSON.parse(localStorage.getItem("user"));
+
+//   if (!user || !user.id) {
+//     toast.error("Please login to add items to cart");
+//     return;
+//   }
+
+//   const payload = {
+//     userId: user.id,            // ✅ correct key
+//     productId: product._id,
+//     name: product.name,
+//     price: product.price,
+//     quantity: 1,
+//     filepath: product.filepath || ""
 //   };
+
+//   addToCart(payload); // ✅ correct usage
+// };
+
+
+//   useEffect(() => {
+//     fetchAllProducts()
+//       .then((res) => setProducts(res.data))
+//       .catch((err) => console.error("Error fetching products:", err));
+//   }, []);
 
 //   return (
 //     <div className="font-serif">
 //       {/* Header */}
-//       <header className="flex justify-between items-center p-4 border-b" style={{ backgroundColor: '#FFFEF9' }}>
+//       <header className="flex justify-between items-center p-4 border-b" style={{ backgroundColor: "#FFFEF9" }}>
 //         <div className="w-32">
 //           <img src="/images/splash.png" alt="JewelMe Logo" className="w-full h-auto" />
 //         </div>
 
 //         <nav className="space-x-6 text-sm">
-//           {['/', '/shop', '/pages', '/about'].map((path, idx) => (
+//           {["/", "/necklaces", "/hoops", "/rings", "/bracelets", "/watches", "/bestsellers"].map((path, idx) => (
 //             <NavLink
 //               key={path}
 //               to={path}
 //               className={({ isActive }) =>
-//                 isActive ? 'text-red-500' : 'text-black hover:text-red-500 transition-colors duration-300'
+//                 isActive
+//                   ? "text-red-500"
+//                   : "text-black hover:text-red-500 transition-colors duration-300"
 //               }
 //             >
-//               {['Home', 'Shop', 'Pages', 'About us'][idx]}
+//               {["Home", "Necklaces", "Hoops", "Rings", "Bracelets", "Watches", "Best Sellers"][idx]}
 //             </NavLink>
 //           ))}
 //         </nav>
 
-//      <div className="flex items-center gap-4 text-2xl">
-//   <Link to="/profile" title="Profile" className="text-red-500 hover:text-black transition-colors duration-200">
-//     <FaUserCircle />
-//   </Link>
+//         <div className="flex items-center gap-3 text-xl">
+//           {/* Search */}
+//           <div className="relative">
+//             <button
+//               onClick={() => setShowSearchDropdown((prev) => !prev)}
+//               title="Search"
+//               className="text-red-500 hover:text-black transition-colors duration-200 p-1"
+//             >
+//               <FaSearch size={18} />
+//             </button>
 
-//   <Link to="/cart" title="Cart" className="text-red-500 hover:text-black transition-colors duration-200">
-//     <FaShoppingBag />
-//   </Link>
+//             {showSearchDropdown && (
+//               <div className="absolute right-0 mt-2 bg-white border rounded-lg shadow-lg z-50 p-4 w-64">
+//                 <input
+//                   type="text"
+//                   placeholder="Search products..."
+//                   onChange={(e) => setSearchTerm(e.target.value)}
+//                   className="w-full px-3 py-2 border rounded mb-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
+//                 />
 
-//   <Link to="/wishlist" title="Wishlist" className="text-red-500 hover:text-black transition-colors duration-200">
-//     <FaHeart />
-//   </Link>
-// </div>
+//                 <div className="border-t pt-2">
+//                   <p className="text-xs font-semibold mb-1 text-gray-500">Categories</p>
+//                   {[
+//                     { label: "Best Sellers", path: "/bestsellers" },
+//                     { label: "Necklaces", path: "/necklaces" },
+//                     { label: "Hoops", path: "/hoops" },
+//                     { label: "Rings", path: "/rings" },
+//                     { label: "Bracelets", path: "/bracelets" },
+//                     { label: "Watches", path: "/watches" },
+//                     { label: "Traditionals", path: "/traditionals" },
+//                   ].map((item) => (
+//                     <Link
+//                       key={item.label}
+//                       to={item.path}
+//                       className="block px-2 py-1 text-sm text-gray-700 hover:bg-red-100 rounded"
+//                       onClick={() => setShowSearchDropdown(false)}
+//                     >
+//                       {item.label}
+//                     </Link>
+//                   ))}
+//                 </div>
 
+//                 {searchTerm && (
+//                   <div className="border-t mt-2 pt-2">
+//                     <p className="text-xs font-semibold text-gray-500 mb-1">Results</p>
+//                     {products
+//                       .filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase()))
+//                       .slice(0, 5)
+//                       .map((product) => (
+//                         <div
+//                           key={product._id}
+//                           className="cursor-pointer px-2 py-1 text-sm hover:bg-gray-100 rounded"
+//                           onClick={() => {
+//                             navigate(`/products/${product._id}`);
+//                             setShowSearchDropdown(false);
+//                           }}
+//                         >
+//                           {product.name}
+//                         </div>
+//                       ))}
+//                   </div>
+//                 )}
+//               </div>
+//             )}
+//           </div>
+
+//           <Link to="/profile" title="Profile" className="text-red-500 hover:text-black">
+//             <FaUserCircle />
+//           </Link>
+//           <span className="text-sm text-black font-normal">Hi, {userName}</span>
+
+//           <Link to="#" title="Bag" onClick={toggleDrawer} className="text-red-500 hover:text-black">
+//             <FaShoppingBag />
+//           </Link>
+//           <Link to="/wishlist" title="Wishlist" className="text-red-500 hover:text-black">
+//             <FaHeart />
+//           </Link>
+//         </div>
 //       </header>
 
 //       {/* Hero */}
@@ -405,96 +578,121 @@ export default function Dashboard() {
 //         transition={{ duration: 1 }}
 //       />
 
-//       {/* Categories Section */}
-//       <section className="py-10 bg-[linear-gradient(to_right,_#fef6f9,_#f0f4ff,_#f6fff9)]">
-//         <motion.h2
-//           className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-8 tracking-wide"
-//           initial={{ opacity: 0, y: -20 }}
-//           whileInView={{ opacity: 1, y: 0 }}
-//           transition={{ duration: 0.6, type: 'spring' }}
-//         >
-//           Categories
-//         </motion.h2>
+//       {/* Bestsellers */}
+//       <section className="px-6 pt-12">
+//         <h2 className="text-4xl font-bold text-center text-yellow-600 mb-8">Bestsellers</h2>
+//         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+//           {bestsellers.map((product) => {
+//             const isFavorited = isInWishlist(product._id);
 
-//         <div className="flex justify-center flex-wrap gap-6 px-4">
-//           {categories.map((cat, i) => (
-//             <motion.div
-//               key={cat.name}
-//               className="text-center text-black cursor-pointer"
-//               initial={{ opacity: 0, y: 20 }}
-//               whileInView={{ opacity: 1, y: 0 }}
-//               whileHover={{ scale: 1.05, y: -5 }}
-//               transition={{ type: 'spring', stiffness: 300, delay: i * 0.1 }}
-//             >
-//               <img src={cat.img} alt={cat.name} className="w-48 h-48 object-cover rounded-full shadow-lg mx-auto" />
-//               <p className="mt-3 font-semibold text-lg text-gray-700">{cat.name}</p>
-//             </motion.div>
-//           ))}
+//             return (
+//               <div
+//                 key={product._id}
+//                 onClick={() => navigate(`/products/${product._id}`)}
+//                 className="relative group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer"
+//               >
+//                 <button
+//                   className={`absolute top-3 right-3 z-10 bg-white p-2 rounded-full shadow-lg transition-colors duration-300 ${
+//                     isFavorited ? "text-red-500" : "text-gray-400 hover:text-red-500"
+//                   }`}
+//                   onClick={(e) => {
+//                     e.stopPropagation();
+//                     toggleFavorite(product);
+//                   }}
+//                 >
+//                   <FaHeart size={18} />
+//                 </button>
+
+//                 <img
+//                   src={getBackendImageUrl(product.filepath)}
+//                   alt={product.name}
+//                   className="w-full h-[320px] object-cover transition-transform duration-300 group-hover:scale-105"
+//                 />
+
+//                 <div className="p-5 space-y-2">
+//                   <h3 className="text-xl font-bold text-gray-800">{product.name}</h3>
+//                   <p className="text-md text-gray-600">Rs. {product.price}</p>
+//                   <p className="text-sm text-gray-500">In Stock: {product.stock}</p>
+//                   <p className="text-sm text-gray-500 truncate">
+//                     {product.description || "No description available"}
+//                   </p>
+
+//                   <div className="pt-3">
+//                     <motion.button
+//                       whileTap={{ scale: 0.95 }}
+//                       className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold py-2 rounded-xl shadow-md hover:from-pink-600 hover:to-red-600 transition-all duration-300"
+//                       onClick={(e) => {
+//                         e.stopPropagation();
+//                         handleAddToCart(product);
+//                         addToCart(product);
+
+//                       }}
+//                     >
+//                       Add to Bag
+//                     </motion.button>
+//                   </div>
+//                 </div>
+//               </div>
+//             );
+//           })}
 //         </div>
 //       </section>
 
-//       {/* Best Sellers Section */}
-//       <section className="bg-[#f4f1ed] p-8 relative">
-//         <motion.h2
-//           className="text-4xl font-bold text-gray-800 mb-6 text-center"
-//           initial={{ opacity: 0, y: -30 }}
-//           animate={{ opacity: 1, y: 0 }}
-//           transition={{ duration: 0.6, ease: 'easeOut' }}
-//         >
-//           Best Sellers
-//         </motion.h2>
+//       {/* Shop Products */}
+//       <section className="px-6 pt-16 pb-12">
+//         <h2 className="text-4xl font-bold text-center text-red-500 mb-8">Shop Products</h2>
+//         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+//           {shopProducts.map((product) => {
+//             const isFavorited = isInWishlist(product._id);
 
-//         {/* Scroll Buttons */}
-//         <button
-//           onClick={scrollLeft}
-//           className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-200 transition"
-//         >
-//           <FaChevronLeft className="text-xl text-gray-700" />
-//         </button>
+//             return (
+//               <div
+//                 key={product._id}
+//                 onClick={() => navigate(`/products/${product._id}`)}
+//                 className="relative group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer"
+//               >
+//                 <button
+//                   className={`absolute top-3 right-3 z-10 bg-white p-2 rounded-full shadow-lg transition-colors duration-300 ${
+//                     isFavorited ? "text-red-500" : "text-gray-400 hover:text-red-500"
+//                   }`}
+//                   onClick={(e) => {
+//                     e.stopPropagation();
+//                     toggleFavorite(product);
+//                   }}
+//                 >
+//                   <FaHeart size={18} />
+//                 </button>
 
-//         <button
-//           onClick={scrollRight}
-//           className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-md hover:bg-gray-200 transition"
-//         >
-//           <FaChevronRight className="text-xl text-gray-700" />
-//         </button>
+//                 <img
+//                   src={getBackendImageUrl(product.filepath)}
+//                   alt={product.name}
+//                   className="w-full h-[320px] object-cover transition-transform duration-300 group-hover:scale-105"
+//                 />
 
-//         {/* Scrollable Images */}
-//         <div
-//           ref={scrollRef}
-//           className="flex gap-4 overflow-x-auto overflow-y-hidden scroll-smooth px-1 pb-2 h-80"
-//           style={{
-//             scrollbarWidth: 'none',
-//             msOverflowStyle: 'none',
-//           }}
-//         >
-//           {catalogImages.map((img, i) => (
-//             <motion.div
-//               key={i}
-//               className="relative min-w-[200px] h-80 rounded-lg overflow-hidden shadow-lg flex-shrink-0 will-change-transform"
-//               whileHover={{ scale: 1.05 }}
-//               transition={{ type: 'spring', stiffness: 300 }}
-//               style={{ scrollbarWidth: 'none' }}
-//             >
-//               <img src={img} alt={`Catalog ${i}`} className="w-full h-full object-cover" />
-//               <button className="absolute bottom-3 right-3 bg-white p-2 rounded-full shadow hover:text-red-500 transition text-gray-700">
-//                 <FaHeart />
-//               </button>
-//             </motion.div>
-//           ))}
-//         </div>
-//       </section>
+//                 <div className="p-5 space-y-2">
+//                   <h3 className="text-xl font-bold text-gray-800">{product.name}</h3>
+//                   <p className="text-md text-gray-600">Rs. {product.price}</p>
+//                   <p className="text-sm text-gray-500">In Stock: {product.stock}</p>
+//                   <p className="text-sm text-gray-500 truncate">
+//                     {product.description || "No description available"}
+//                   </p>
 
-//       {/* Spring Catalog Section */}
-//       <section className="relative bg-[url('/images/beachimg.jpg')] bg-cover bg-center h-[800px] md:h-[800px] w-full text-center text-white">
-//         <div className="max-w-4xl mx-auto px-6 flex flex-col justify-center h-full">
-//           <h1 className="text-5xl md:text-6xl font-serif font-bold text-gray-800 mb-6">Summer Catalog</h1>
-//           <a
-//             href="#"
-//             className="text-xl md:text-5xl font-medium text-gray-700 hover:text-white inline-flex items-center justify-center gap-2"
-//           >
-//             View Now <span className="text-3xl">→</span>
-//           </a>
+//                   <div className="pt-3">
+//                     <motion.button
+//                       whileTap={{ scale: 0.95 }}
+//                       className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold py-2 rounded-xl shadow-md hover:from-pink-600 hover:to-red-600 transition-all duration-300"
+//                       onClick={(e) => {
+//                         e.stopPropagation();
+//                         handleAddToCart(product);
+//                       }}
+//                     >
+//                       Add to Bag
+//                     </motion.button>
+//                   </div>
+//                 </div>
+//               </div>
+//             );
+//           })}
 //         </div>
 //       </section>
 
@@ -503,7 +701,8 @@ export default function Dashboard() {
 //         <div>
 //           <h4 className="text-lg font-bold mb-3 tracking-wide">Stay Connected</h4>
 //           <p className="leading-relaxed">
-// Discover exclusive offers, early access to new collections, style inspiration, and personalized recommendations just for you.</p>
+//             Discover exclusive offers, early access to new collections, style inspiration, and personalized recommendations just for you.
+//           </p>
 //         </div>
 
 //         <div>
@@ -520,13 +719,18 @@ export default function Dashboard() {
 //           <p className="mb-2">123456789</p>
 //           <p>Follow us on:</p>
 //           <div className="flex items-center gap-4 mt-2">
-//             <FaInstagram className="text-2xl hover:scale-110 hover:text-white transition-all duration-200 cursor-pointer" />
-//             <FaFacebook className="text-2xl hover:scale-110 hover:text-white transition-all duration-200 cursor-pointer" />
-//             <FaTiktok className="text-2xl hover:scale-110 hover:text-white transition-all duration-200 cursor-pointer" />
+//             <FaInstagram className="text-xl hover:scale-110 hover:text-white transition-all duration-200 cursor-pointer" />
+//             <FaFacebook className="text-xl hover:scale-110 hover:text-white transition-all duration-200 cursor-pointer" />
+//             <FaTiktok className="text-xl hover:scale-110 hover:text-white transition-all duration-200 cursor-pointer" />
 //           </div>
 //           <p className="mt-2 text-xs font-bold text-black">@Jewelmeeveryday</p>
 //         </div>
 //       </footer>
+
+//       <div className="bg-red-300 text-center text-sm py-4 text-black">© 2025 JewelMe. All rights reserved.</div>
+
+//       {/* 🛒 Cart Drawer */}
+//       <CartDrawer isOpen={isCartOpen} onClose={toggleDrawer} />
 //     </div>
 //   );
 // }

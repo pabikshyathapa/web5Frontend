@@ -7,7 +7,7 @@ import { useWishlist } from "../wishlistContent";
 import { motion } from "framer-motion";
 import { useCart } from "../cartContext";
 
-export default function NecklacesPage() {
+export default function BestSellersPage() {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
@@ -25,18 +25,19 @@ export default function NecklacesPage() {
   useEffect(() => {
     fetchAllProducts()
       .then((res) => {
-        const necklaces = res.data.filter(
-          (product) => product.categoryId?.name?.toLowerCase() === "necklaces"
+        const traditionals = res.data.filter(
+          (product) =>
+            product.categoryId?.name?.toLowerCase() === "best sellers"
         );
-        setProducts(necklaces);
+        setProducts(traditionals);
       })
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white px-6 py-12">
-      <h1 className="text-4xl font-extrabold text-center text-indigo-700 mb-10">
-        Necklaces
+      <h1 className="text-4xl font-extrabold text-center text-yellow-600 mb-10">
+        Best Sellers
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {products.map((product) => (
@@ -80,7 +81,7 @@ export default function NecklacesPage() {
                   whileTap={{ scale: 0.12, rotate: -12 }}
                   className="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold py-2 rounded-xl shadow-md hover:from-pink-600 hover:to-red-600 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-pink-300"
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent card click navigation
+                    e.stopPropagation();
                     addToCart(product);
                   }}
                 >

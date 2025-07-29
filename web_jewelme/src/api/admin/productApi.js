@@ -1,7 +1,7 @@
 import axios from "../api"
 
  // ✅ Get all products
- export const getAllProductApi = async (page = 1, limit = 8) => {
+ export const getAllProductApi = async (page = 1, limit = 9) => {
   return await axios.get('http://localhost:5050/api/admin/product', {
     params: { page, limit }
   });

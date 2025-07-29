@@ -9,7 +9,7 @@ import {
 import { toast } from "react-toastify";
 
 // ✅ Fetch all products
-export const useAdminProduct = (page = 1, limit = 8) => {
+export const useAdminProduct = (page = 1, limit = 9) => {
   const query = useQuery({
     queryKey: ["admin_product", page],
     queryFn: () => getAllProductService(page, limit)

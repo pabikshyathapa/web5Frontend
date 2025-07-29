@@ -95,7 +95,7 @@ const WishlistPage = () => {
                       addToCart(product); // move to cart
                       removeFromWishlist(product._id); // remove from wishlist
                     }}
-                    className="bg-red-500 text-white py-2 px-12 rounded-full hover:bg-gray-500 transition"
+                    className="bg-red-500 text-white py-2 px-12 rounded-full hover:bg-indigo-600 transition"
                   >
                     Move To Bag
                   </button>

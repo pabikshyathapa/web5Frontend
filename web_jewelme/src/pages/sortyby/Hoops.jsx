@@ -56,7 +56,7 @@ export default function HoopsPage() {
                 toggleFavorite(product);
               }}
             >
-              <FaHeart size={18} />
+              <FaHeart size={20} />
             </button>
 
             <img

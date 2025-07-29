@@ -6,8 +6,8 @@ import {
     deleteOneProductApi
 } from "../../api/admin/productApi";
 
-// ✅ Get all products
-export const getAllProductService = async (page = 1, limit = 8) => {
+// Get all products
+export const getAllProductService = async (page = 1, limit = 9) => {
   try {
     const res = await getAllProductApi(page, limit);
     return res.data; // includes { data, total, page, pages }

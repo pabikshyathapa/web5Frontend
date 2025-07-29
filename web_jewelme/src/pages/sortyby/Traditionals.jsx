@@ -57,7 +57,7 @@ export default function TraditionalsPage() {
                 toggleFavorite(product);
               }}
             >
-              <FaHeart size={18} />
+              <FaHeart size={20} />
             </button>
 
             <img

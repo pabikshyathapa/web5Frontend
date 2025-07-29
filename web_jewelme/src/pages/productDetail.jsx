@@ -4,9 +4,12 @@ import axios from "axios";
 import { useCart } from "./cartContext";
 import { motion } from "framer-motion";
 import { getBackendImageUrl } from "../utils/backend-image";
+import { FaHeart } from "react-icons/fa";
+import { useWishlist } from "./wishlistContent"; // ✅ Add this
 
 export default function ProductDetails() {
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist(); // ✅ Use wishlist logic
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,6 +27,15 @@ export default function ProductDetails() {
       });
   }, [id]);
 
+  const toggleFavorite = (product) => {
+    const alreadyFavorited = isInWishlist(product._id);
+    if (alreadyFavorited) {
+      removeFromWishlist(product._id);
+    } else {
+      addToWishlist(product);
+    }
+  };
+
   if (loading)
     return (
       <div className="p-10 text-center text-gray-600">Loading product...</div>
@@ -33,9 +45,26 @@ export default function ProductDetails() {
       <div className="p-10 text-center text-red-500">Product not found.</div>
     );
 
+  const isFavorited = isInWishlist(product._id); //  Check if favorited
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white px-6 py-12 flex justify-center">
-      <div className="max-w-6xl w-full bg-white rounded-3xl shadow-xl p-8 flex flex-col md:flex-row gap-10">
+      <div className="max-w-6xl w-full bg-white rounded-3xl shadow-xl p-8 flex flex-col md:flex-row gap-10 relative">
+        {/*  Favorite Heart Icon */}
+        <button
+          className={`absolute top-2 right-4 z-10 bg-white p-2 rounded-full shadow-lg transition-colors duration-300 ${
+            isFavorited
+              ? "text-red-500"
+              : "text-gray-400 hover:text-red-500"
+          }`}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFavorite(product);
+          }}
+        >
+          <FaHeart size={20} />
+        </button>
+
         {/* Left Side: Image */}
         <div className="w-full md:w-3/5 h-full flex items-start">
           <img

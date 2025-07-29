@@ -57,7 +57,7 @@ export default function BraceletsPage() {
                 toggleFavorite(product);
               }}
             >
-              <FaHeart size={18} />
+              <FaHeart size={20} />
             </button>
             <img
               src={getBackendImageUrl(product.filepath)}

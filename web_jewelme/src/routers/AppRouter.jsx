@@ -6,7 +6,6 @@ import Register from '../pages/Register'
 import MainLayout from '../layouts/MainLayout'
 import StateManage from '../pages/StateManage'
 import LoginTest from '../pages/LoginTest'
-import GuestRoute from './GuestRoute'
 import NormalUserRoute from './NormalUserRoute'
 import AuthContextProvider from '../auth/AuthProvider'
 //adminpages
@@ -36,7 +35,9 @@ import RingsPage from '../pages/sortyby/Rings'
 import BraceletsPage from '../pages/sortyby/Bracelets'
 import WatchesPage from '../pages/sortyby/Watches'
 import TraditionalsPage from '../pages/sortyby/Traditionals'
-
+import BestSellersPage from '../pages/sortyby/BestSellers'
+import CheckoutPage from '../pages/checkOut'
+import MyBag from '../pages/bagPage'
 export default function AppRouter() {
   return (
     <AuthContextProvider>
@@ -46,23 +47,27 @@ export default function AppRouter() {
         <Route path='/state-test' element={<StateManage />}></Route>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Homepage />}></Route>
-          <Route element={<GuestRoute/>}>
+          {/* <Route element={<GuestRoute/>}> */}
           <Route path="/login" element={<Login />}></Route>
           <Route path='/register' element={<Register />}></Route>
           <Route path='/dashboard' element={<Dashboard />}></Route>
           <Route path='/profile' element={<ProfilePage />}></Route>
           <Route path='/products/:id' element={<ProductDetails />}></Route>
-          <Route path="/tocart" element={<CartPage />}></Route>
+          {/* <Route path="/tocart" element={<Cart />}></Route> */}
           <Route path="/wishlist" element={<WishlistPage />}></Route>
+          <Route path="/checkout" element={<CheckoutPage />}></Route>
           <Route path="/necklaces" element={< NecklacesPage/>}></Route>
           <Route path="/hoops" element={< HoopsPage/>}></Route>
           <Route path="/rings" element={< RingsPage/>}></Route>
           <Route path="/bracelets" element={< BraceletsPage/>}></Route>
           <Route path="/watches" element={< WatchesPage/>}></Route>
           <Route path="/traditionals" element={<TraditionalsPage/>}></Route>
+          <Route path="/bestsellers" element={<BestSellersPage/>}></Route>
+          <Route path="/tobag" element={<MyBag/>}></Route>
+
 
         </Route>
-        </Route>
+        {/* </Route> */}
         <Route path='/normal/*' element={<NormalUserRoute/>}>
         <Route path='order' element={<>My Order</>}></Route>
         <Route path='cart' element={<>My Cart</>}></Route>

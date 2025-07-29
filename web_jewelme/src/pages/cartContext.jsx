@@ -8,7 +8,7 @@ const CART_KEY = "jewelme_cart"; // Unique key for localStorage
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
-  // ✅ Load cart from localStorage on mount
+  // Load cart from localStorage on mount
   useEffect(() => {
     const storedCart = localStorage.getItem(CART_KEY);
     if (storedCart) {
@@ -16,12 +16,12 @@ export const CartProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ Save cart to localStorage on change
+  //  Save cart to localStorage on change
   useEffect(() => {
     localStorage.setItem(CART_KEY, JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // ✅ Add to cart with quantity = 1
+  //  Add to cart with quantity = 1
   const addToCart = (product) => {
     setCartItems((prevItems) => {
       const exists = prevItems.find((item) => item._id === product._id);
@@ -30,12 +30,12 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-  // ✅ Remove from cart
+  // Remove from cart
   const removeFromCart = (id) => {
     setCartItems((prev) => prev.filter((item) => item._id !== id));
   };
 
-  // ✅ Update quantity (+ or -)
+  //  Update quantity (+ or -)
   const updateQuantity = (id, change) => {
     setCartItems((prev) =>
       prev.map((item) =>

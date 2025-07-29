@@ -52,7 +52,7 @@ export default function CartDrawer({ isOpen, onClose }) {
         <h2 className="text-3xl font-semibold mb-8">{userName}'s Bag</h2>
 
         {cartItems.length === 0 ? (
-          <p className="text-gray-600">Your cart is empty.</p>
+          <p className="text-gray-600">Your Bag is empty.</p>
         ) : (
           <div className="space-y-4">
             {cartItems.map((item) => (
@@ -122,14 +122,18 @@ export default function CartDrawer({ isOpen, onClose }) {
                 className={`mt-2 w-full py-2 rounded text-white font-semibold ${
                   selectedItems.length === 0
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-red-500 hover:bg-gray-500"
+                    : "bg-red-500 hover:bg-indigo-600"
                 }`}
                 onClick={() => {
-                  alert(
-                    `Checkout for items: ${selectedItems.join(
-                      ", "
-                    )}\nTotal: Rs. ${total}`
+                  const selectedProducts = cartItems.filter((item) =>
+                    selectedItems.includes(item._id)
                   );
+
+                  navigate("/checkout", {
+                    state: {
+                      selectedItems: selectedProducts,
+                    },
+                  });
                 }}
               >
                 Checkout

@@ -57,48 +57,46 @@ export default function ProductTable() {
       {isPending ? (
         <div className="text-center text-gray-600 text-lg">Loading...</div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
           {products
-            .filter((product) =>
-              product.name.toLowerCase().includes(search.toLowerCase())
-            )
-            .map((product) => (
-              <div
-                key={product._id}
-                className="bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300"
-              >
-                <img
-                  src={getBackendImageUrl(product.filepath)}
-                  alt={product.name}
-                  className="w-full h-56 object-cover"
-                />
-                <div className="p-4 space-y-1">
-                  <h3 className="text-lg font-bold text-gray-800">{product.name}</h3>
-                  <p className="text-sm text-gray-600">Price: Rs. {product.price}</p>
-                  <p className="text-sm text-gray-600">Category: {product.categoryId?.name || 'N/A'}</p>
-                  <p className="text-sm text-gray-600">Seller: {product.sellerId?.name || 'N/A'}</p>
-                  
-                  {/* NEW: Description and Stock */}
-                  <p className="text-sm text-gray-600">Description: {product.description || 'No description'}</p>
-                  <p className="text-sm text-gray-600">Stock: {product.stock != null ? product.stock : 'N/A'}</p>
-                </div>
+  .filter((product) =>
+    product.name.toLowerCase().includes(search.toLowerCase())
+  )
+  .map((product) => (
+    <div
+      key={product._id}
+      className="bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 w-[280px] sm:w-[360px] mx-auto"
+    >
+      <img
+        src={getBackendImageUrl(product.filepath)}
+        alt={product.name}
+        className="w-full h-64 object-cover"
+      />
+      <div className="p-4 space-y-1">
+        <h3 className="text-lg font-bold text-gray-800">{product.name}</h3>
+        <p className="text-sm text-gray-600">Price: Rs. {product.price}</p>
+        <p className="text-sm text-gray-600">Category: {product.categoryId?.name || 'N/A'}</p>
+        <p className="text-sm text-gray-600">Seller: {product.sellerId?.name || 'N/A'}</p>
+        <p className="text-sm text-gray-600">Description: {product.description || 'No description'}</p>
+        <p className="text-sm text-gray-600">Stock: {product.stock != null ? product.stock : 'N/A'}</p>
+      </div>
 
-                {/* Actions */}
-                <div className="flex justify-around items-center p-3 border-t text-gray-600">
-                  <Link to={`/admins/productss/${product._id}`} title="View">
-                    <FaEye className="hover:text-blue-600 cursor-pointer" />
-                  </Link>
-                  <Link to={`/admins/productss/${product._id}/edit`} title="Edit">
-                    <FaEdit className="hover:text-yellow-500 cursor-pointer" />
-                  </Link>
-                  <FaTrash
-                    title="Delete"
-                    onClick={() => setDeleteId(product._id)}
-                    className="hover:text-red-600 cursor-pointer"
-                  />
-                </div>
-              </div>
-            ))}
+      <div className="flex justify-around items-center p-3 border-t text-gray-600">
+        <Link to={`/admins/productss/${product._id}`} title="View">
+          <FaEye className="hover:text-blue-600 cursor-pointer" />
+        </Link>
+        <Link to={`/admins/productss/${product._id}/edit`} title="Edit">
+          <FaEdit className="hover:text-yellow-500 cursor-pointer" />
+        </Link>
+        <FaTrash
+          title="Delete"
+          onClick={() => setDeleteId(product._id)}
+          className="hover:text-red-600 cursor-pointer"
+        />
+      </div>
+    </div>
+  ))}
+
         </div>
       )}
 

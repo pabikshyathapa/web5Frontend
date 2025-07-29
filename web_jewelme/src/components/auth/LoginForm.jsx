@@ -32,6 +32,8 @@ export default function LoginForm() {
 
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("userId", userData._id); 
+
 
       toast.success("Login successful!", { position: "top-center" });
 
