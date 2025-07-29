@@ -3,15 +3,23 @@ import {
   getUserCartService,
   addToCartService,
   updateCartItemService,
-  deleteCartItemService
+  deleteCartItemService,
+  getAllCartItemsService,
+  clearAllCartItemsService
 } from "../services/cartService";
-import { toast } from "react-toastify";
 
+// export const useUserCart = (userId) => {
+//   return useQuery({
+//     queryKey: ["user_cart", userId],
+//     queryFn: () => getUserCartService(userId),
+//     enabled: !!userId,
+//   });
+// };
 export const useUserCart = (userId) => {
   return useQuery({
     queryKey: ["user_cart", userId],
     queryFn: () => getUserCartService(userId),
-    enabled: !!userId,
+    enabled: !!userId, // Only fetch when userId is available
   });
 };
  
@@ -21,8 +29,8 @@ export const useAddToCart = () => {
   return useMutation({
     mutationFn: addToCartService,
     onSuccess: (data) => {
-      toast.success(data.message);
-      // ✅ Invalidate cart so it refetches
+      // toast.success(data.message);
+      // Invalidate cart so it refetches
       const user = JSON.parse(localStorage.getItem("user"));
       if (user?._id) {
         queryClient.invalidateQueries(["user_cart", user._id]);
@@ -35,31 +43,48 @@ export const useAddToCart = () => {
 };
 
 // Update cart item
-export const useUpdateCartItem = () => {
+
+export const useDeleteCartItem = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }) => updateCartItemService(id, data),
-    onSuccess: () => {
-      toast.success("Cart item updated");
-      queryClient.invalidateQueries(["user_cart"]);
-    },
-    onError: (err) => {
-      toast.error(err.message || "Update failed");
+    mutationFn: ({ userId, productId }) => deleteCartItemService(userId, productId),
+    onSuccess: (_, { userId }) => {
+      queryClient.invalidateQueries({ queryKey: ["user_cart", userId] });
     }
   });
 };
 
-// Delete cart item
-export const useDeleteCartItem = () => {
+export const useUpdateCartItem = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: deleteCartItemService,
-    onSuccess: () => {
-      toast.success("Item removed from cart");
-      queryClient.invalidateQueries(["user_cart"]);
+    mutationFn: ({ userId, productId, quantity }) =>
+      updateCartItemService(userId, productId, quantity),
+    onSuccess: (_, { userId }) => {
+      queryClient.invalidateQueries({ queryKey: ["user_cart", userId] });
+    }
+  });
+};
+
+
+export const useAllCartItems = () => {
+  return useQuery({
+    queryKey: ["all_cart_items"],
+    queryFn: getAllCartItemsService,
+  });
+};
+
+export const useClearAllCartItems = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: clearAllCartItemsService,
+    onSuccess: (data) => {
+      // toast.success(data.message || "All cart items cleared");
+      queryClient.invalidateQueries(["all_cart_items"]);
+      queryClient.invalidateQueries({ queryKey: ["user_cart"] });
     },
-    onError: (err) => {
-      toast.error(err.message || "Delete failed");
+    onError: (error) => {
+      toast.error(error.message || "Failed to clear all cart items");
     }
   });
 };

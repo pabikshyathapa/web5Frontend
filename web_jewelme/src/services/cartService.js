@@ -2,7 +2,9 @@ import {
   getUserCartApi,
   addToCartApi,
   updateCartItemApi,
-  deleteCartItemApi
+  deleteCartItemApi,
+  getAllCartItemsApi,
+  clearAllCartItemsApi
 } from "../api/cartApi";
 
 // cartService.js
@@ -60,6 +62,25 @@ export const addToCartService = async (data) => {
     return response.data;
   } catch (err) {
     throw err.response?.data || { message: "Failed to add to cart" };
+  }
+};
+
+// Fetch all cart items from all users (for admin or general display)
+export const getAllCartItemsService = async () => {
+  try {
+    const response = await getAllCartItemsApi();
+    console.log(" All Cart Items Response:", response.data);
+    return response.data?.data || [];
+  } catch (err) {
+    throw err.response?.data || { message: "Failed to fetch all cart items" };
+  }
+};
+export const clearAllCartItemsService = async () => {
+  try {
+    const response = await clearAllCartItemsApi();
+    return response.data; // usually has { success, message }
+  } catch (err) {
+    throw err.response?.data || { message: "Failed to clear all cart items" };
   }
 };
 

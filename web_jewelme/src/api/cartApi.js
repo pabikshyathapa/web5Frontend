@@ -1,8 +1,9 @@
+import { data } from "react-router-dom";
 import axios from "../api/api";
 
 // Get user's cart items
 export const  getUserCartApi = async (userId) => {
-  const res = await axios.get(`/cart/${userId}`);
+  const res = await axios.get(`/cart/${user._Id}`);
   return res.data;
 };
 
@@ -25,5 +26,15 @@ export const updateCartItemApi = async (data) => {
 // delete
 export const deleteCartItemApi = async (data) => {
   return await axios.delete(`/cart/remove`, { data });
+};
+
+
+export const getAllCartItemsApi = async () => {
+  return axios.get(`cart/all`,{data});
+};
+
+export const   clearAllCartItemsApi
+ = async () => {
+  return axios.delete(`cart/clear-all`,{data});
 };
 

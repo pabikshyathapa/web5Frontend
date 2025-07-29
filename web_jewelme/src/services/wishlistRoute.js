@@ -7,9 +7,10 @@ import {
 export const addToWishlistService = async (data) => {
   try {
     const response = await addToWishlist(data);
-    return response;
+    console.log("ADD CART RESPONSE", response.data);
+    return response.data;
   } catch (err) {
-    throw err.response?.data || { message: "Failed to add to wishlist" };
+    throw err.response?.data || { message: "Failed to add to Wishlist" };
   }
 };
 
@@ -28,5 +29,13 @@ export const removeFromWishlistService = async (data) => {
     return response;
   } catch (err) {
     throw err.response?.data || { message: "Failed to remove from wishlist" };
+  }
+};
+export const getAllWishlistsService = async () => {
+  try {
+    const response = await getAllWishlists();
+    return response;
+  } catch (err) {
+    throw err.response?.data || { message: "Failed to fetch all wishlists" };
   }
 };
