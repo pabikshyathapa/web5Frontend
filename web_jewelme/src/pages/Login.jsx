@@ -13,11 +13,11 @@ export default function Login() {
     }
 
     //If user is logged in, show "You are already login in"
-    if(user) {
-        return(
-            <div> You are already logged in.</div>
-        )
-    }
+    // if(user) {
+    //     return(
+    //         <div> You are already logged in.</div>
+    //     )
+    // }
     
     return (
         <div>

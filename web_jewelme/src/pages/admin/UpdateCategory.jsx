@@ -56,7 +56,7 @@ export default function UpdateCategory() {
             type="text"
             onChange={formik.handleChange}
             value={formik.values.name}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none"
           />
           {formik.touched.name && formik.errors.name && (
             <p className="text-red-500 text-sm mt-1">{formik.errors.name}</p>
@@ -74,7 +74,7 @@ export default function UpdateCategory() {
               const file = e.currentTarget.files[0];
               if (file) formik.setFieldValue("image", file);
             }}
-            className="w-full bg-white px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            className="w-full bg-white px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none"
           />
           {formik.touched.image && formik.errors.image && (
             <p className="text-red-500 text-sm mt-1">{formik.errors.image}</p>
@@ -99,7 +99,7 @@ export default function UpdateCategory() {
         <div className="pt-4">
           <button
             type="submit"
-            className="w-full bg-red-500 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 shadow-md"
+            className="w-full bg-red-500 text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition duration-200 shadow-md"
           >
             Update
           </button>

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { getBackendImageUrl } from "../utils/backend-image";
-import { useClearAllCartItems } from "../hooks/useCart"; // ✅ import clear hook
+import { useClearAllCartItems } from "../hooks/useCart"; //  import clear hook
 
 const Checkout = () => {
   const locationRouter = useLocation();
@@ -15,7 +15,7 @@ const Checkout = () => {
   const [showModal, setShowModal] = useState(false);
   const [orderSnapshot, setOrderSnapshot] = useState([]);
 
-  const { mutate: clearAllCartItems } = useClearAllCartItems(); // ✅ Hook
+  const { mutate: clearAllCartItems } = useClearAllCartItems(); // Hook
 
   const calculateTotal = (items) =>
     items.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -68,7 +68,7 @@ const Checkout = () => {
                   </div>
                 </div>
                 <p className="text-red-600 font-semibold text-lg">
-                  ₹{(item.price * item.quantity).toFixed(2)}
+                  Rs.{(item.price * item.quantity).toFixed(2)}
                 </p>
               </div>
             ))
@@ -94,7 +94,7 @@ const Checkout = () => {
           </p>
           <button
             onClick={handleOrder}
-            className="bg-indigo-600 text-white px-6 py-2 rounded-xl hover:bg-indigo-700 transition duration-200"
+            className="bg-red-600 text-white px-6 py-2 rounded-xl hover:bg-red-700 transition duration-200"
           >
             Place Order
           </button>
@@ -124,7 +124,7 @@ const Checkout = () => {
               </button>
 
               <h2 className="text-2xl font-bold text-green-600 mb-3">
-                ✅ Order Placed!
+                Order Placed!
               </h2>
               <p className="text-gray-600 mb-4">Thank you for your purchase.</p>
 
@@ -133,7 +133,7 @@ const Checkout = () => {
                   <strong>Delivery Address:</strong> {address}
                 </p>
                 <p>
-                  <strong>Total Paid:</strong> ₹{calculateTotal(orderSnapshot).toFixed(2)}
+                  <strong>Total Paid:</strong> Rs.{calculateTotal(orderSnapshot).toFixed(2)}
                 </p>
               </div>
 
@@ -150,7 +150,7 @@ const Checkout = () => {
                       <p className="font-medium">{item.name}</p>
                       <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                       <p className="text-sm text-gray-500">
-                        ₹{(item.price * item.quantity).toFixed(2)}
+                        Rs.{(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>

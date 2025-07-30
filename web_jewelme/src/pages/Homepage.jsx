@@ -191,37 +191,57 @@ export default function JewelMeHome() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-red-300 text-black px-8 py-16 grid grid-cols-1 md:grid-cols-3 gap-12 text-sm">
-        <div>
-          <h4 className="text-lg font-bold mb-3 tracking-wide">Stay Connected</h4>
-          <p className="leading-relaxed">
-Discover exclusive offers, early access to new collections, style inspiration, and personalized recommendations just for you.</p>
-        </div>
-
-        <div>
-          <ul className="space-y-2">
-            <li className="hover:underline cursor-pointer">Help</li>
-            <li className="hover:underline cursor-pointer">Shipping and Return</li>
-            <li className="hover:underline cursor-pointer">Guide</li>
-            <li className="hover:underline cursor-pointer">Our Story</li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="text-lg font-bold mb-3 tracking-wide">Contact Us</h4>
-          <p className="mb-2">123456789</p>
-          <p>Follow us on:</p>
-          <div className="flex items-center gap-4 mt-2">
-            <FaInstagram className="text-2xl hover:scale-110 hover:text-white transition-all duration-200 cursor-pointer" />
-            <FaFacebook className="text-2xl hover:scale-110 hover:text-white transition-all duration-200 cursor-pointer" />
-            <FaTiktok className="text-2xl hover:scale-110 hover:text-white transition-all duration-200 cursor-pointer" />
-          </div>
-          <p className="mt-2 text-xs font-bold text-black">@Jewelmeeveryday</p>
-        </div>
-      </footer>
-      <div className="bg-red-300 text-center text-sm py-4 text-black">
-  © 2025 JewelMe. All rights reserved.
-</div>
-    </div>
+     <footer className="bg-red-300 text-black px-8 py-16 grid grid-cols-1 md:grid-cols-4 gap-12 text-sm">
+       {/* Stay Connected */}
+       <div>
+         <h4 className="text-lg font-bold mb-3 tracking-wide">Stay Connected</h4>
+         <p className="leading-relaxed">
+           Discover exclusive offers, early access to new collections, style inspiration, and personalized
+           recommendations just for you. Be the first to know about limited-time deals and member-only perks.
+         </p>
+       </div>
+     
+       {/* Quick Links */}
+       <div>
+         <h4 className="text-lg font-bold mb-3 tracking-wide">Quick Links</h4>
+         <ul className="space-y-2">
+           <li className="hover:underline cursor-pointer">Help</li>
+           <li className="hover:underline cursor-pointer">Shipping & Returns</li>
+           <li className="hover:underline cursor-pointer">Jewelry Guide</li>
+           <li className="hover:underline cursor-pointer">Our Story</li>
+           <li className="hover:underline cursor-pointer">FAQs</li>
+           <li className="hover:underline cursor-pointer">Privacy Policy</li>
+         </ul>
+       </div>
+     
+       {/* Contact Info */}
+       <div>
+         <h4 className="text-lg font-bold mb-3 tracking-wide">Contact Us</h4>
+         <p className="mb-1">Phone: 123-456-789</p>
+         <p className="mb-1">Email: support@jewelme.com</p>
+         <p className="mb-3"> Kathmandu, Nepal</p>
+         <p className="font-semibold mt-2">Working Hours:</p>
+         <p>Mon - Fri: 9:00am - 6:00pm</p>
+         <p>Sat - Sun: 10:00am - 4:00pm</p>
+       </div>
+     
+       {/* Social Media */}
+       <div>
+         <h4 className="text-lg font-bold mb-3 tracking-wide">Follow Us</h4>
+         <p>Connect on social platforms:</p>
+         <div className="flex items-center gap-4 mt-3">
+           <FaInstagram className="text-2xl hover:scale-110 hover:text-white transition-all duration-200 cursor-pointer" />
+           <FaFacebook className="text-2xl hover:scale-110 hover:text-white transition-all duration-200 cursor-pointer" />
+           <FaTiktok className="text-2xl hover:scale-110 hover:text-white transition-all duration-200 cursor-pointer" />
+         </div>
+         <p className="mt-2 text-xs font-bold">@Jewelmeeveryday</p>
+       </div>
+     </footer>
+     
+     <div className="bg-red-300 text-center text-sm py-4 text-black border-t border-black">
+       © 2025 JewelMe. All rights reserved. 
+     </div>
+     
+         </div>
   );
 }

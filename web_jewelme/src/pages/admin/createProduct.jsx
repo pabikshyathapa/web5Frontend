@@ -69,7 +69,7 @@ export default function CreateProduct() {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-indigo-100 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-red-100 flex items-center justify-center px-4 py-12">
   <div className="bg-white shadow-2xl rounded-3xl w-full max-w-2xl p-10">
     <h2 className="text-3xl font-bold text-gray-800 mb-8 border-b pb-2">
       Add New Product
@@ -192,7 +192,7 @@ export default function CreateProduct() {
             const file = e.currentTarget.files[0]
             if (file) formik.setFieldValue("image", file)
           }}
-          className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-red-500 file:text-white hover:file:bg-indigo-700"
+          className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-red-500 file:text-white hover:file:bg-red-700"
         />
         {formik.touched.image && formik.errors.image && (
           <p className="text-xs text-red-500 mt-1">{formik.errors.image}</p>
@@ -214,7 +214,7 @@ export default function CreateProduct() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-red-500 hover:bg-indigo-500 text-white font-medium py-2 rounded-lg transition duration-200 disabled:opacity-50"
+        className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2 rounded-lg transition duration-200 disabled:opacity-50"
       >
         {isPending ? "Saving..." : "Create Product"}
       </button>

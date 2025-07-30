@@ -73,7 +73,7 @@ export default function UpdateProduct() {
               type="text"
               onChange={formik.handleChange}
               value={formik.values.name}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
             />
             {formik.touched.name && formik.errors.name && <p className="text-red-500 text-sm">{formik.errors.name}</p>}
           </div>
@@ -86,7 +86,7 @@ export default function UpdateProduct() {
               type="number"
               onChange={formik.handleChange}
               value={formik.values.price}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
             />
             {formik.touched.price && formik.errors.price && <p className="text-red-500 text-sm">{formik.errors.price}</p>}
           </div>
@@ -203,7 +203,7 @@ export default function UpdateProduct() {
             <button
               type="submit"
               disabled={updateProduct.isLoading}
-              className="w-full bg-red-500 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 shadow-md disabled:opacity-50"
+              className="w-full bg-red-500 text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition duration-200 shadow-md disabled:opacity-50"
             >
               {updateProduct.isLoading ? "Updating..." : "Update Product"}
             </button>

@@ -34,7 +34,7 @@ export default function CreateCategory() {
         }
     )
     return (
-  <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-white flex items-center justify-center p-6">
+  <div className="min-h-screen bg-gradient-to-br from-red-100 to-white flex items-center justify-center p-6">
     <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">Create Category</h2>
       <form onSubmit={formik.handleSubmit} className="space-y-5">
@@ -46,7 +46,7 @@ export default function CreateCategory() {
             type="text"
             onChange={formik.handleChange}
             value={formik.values.name}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400"
             placeholder="Enter category name"
           />
           {formik.touched.name && formik.errors.name && (
@@ -65,7 +65,7 @@ export default function CreateCategory() {
               const file = e.currentTarget.files[0];
               if (file) formik.setFieldValue("image", file);
             }}
-            className="w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-red-500 file:text-white hover:file:bg-indigo-600"
+            className="w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-red-500 file:text-white hover:file:bg-red-600"
           />
           {formik.touched.image && formik.errors.image && (
             <p className="text-sm text-red-500 mt-1">{formik.errors.image}</p>
@@ -86,7 +86,7 @@ export default function CreateCategory() {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-red-500 text-white py-2 px-4 rounded-md shadow hover:bg-indigo-700 transition duration-200"
+          className="w-full bg-red-500 text-white py-2 px-4 rounded-md shadow hover:bg-red-700 transition duration-200"
         >
           Create Category
         </button>
