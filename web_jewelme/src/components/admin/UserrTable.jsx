@@ -11,12 +11,8 @@ export default function UserTable() {
   const deleteUser = useDeleteUser();
   const [deleteId, setDeleteId] = useState(null);
 
-  const {
-    setPageNumber,
-    canNextPage,
-    canPreviousPage,
-    pagination,
-  } = useAdminCategory();
+  const { setPageNumber, canNextPage, canPreviousPage, pagination } =
+    useAdminCategory();
 
   const handlePrev = () => {
     if (canPreviousPage) {
@@ -44,8 +40,14 @@ export default function UserTable() {
     });
   };
 
-  if (isPending) return <p className="text-center mt-10 text-[#222740]">Loading users...</p>;
-  if (error) return <p className="text-center mt-10 text-red-600">Error loading users: {error.message}</p>;
+  if (isPending)
+    return <p className="text-center mt-10 text-[#222740]">Loading users...</p>;
+  if (error)
+    return (
+      <p className="text-center mt-10 text-red-600">
+        Error loading users: {error.message}
+      </p>
+    );
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -58,7 +60,7 @@ export default function UserTable() {
 
       <div className="overflow-x-auto rounded-xl shadow-lg bg-white">
         <table className="min-w-full text-sm text-left">
-          <thead className="bg-gradient-to-r from-[#f4a7b9] to-[#f9ccd1] text-[#222740] uppercase text-xs font-bold">
+          <thead className="bg-gradient-to-r from-red-400 to-red-500 text-[#222740] uppercase text-xs font-bold">
             <tr>
               <th className="px-6 py-4">Name</th>
               <th className="px-6 py-4">Email</th>
@@ -67,18 +69,12 @@ export default function UserTable() {
           </thead>
           <tbody className="text-[#222740] divide-y divide-gray-200">
             {users.map((user) => (
-              <tr
-                key={user._id}
-                className="hover:bg-pink-50 transition-colors"
-              >
-                <td className="px-6 py-4 font-medium text-base">
-                  {user.name}
-                </td>
+              <tr key={user._id} className="hover:bg-pink-50 transition-colors">
+                <td className="px-6 py-4 font-medium text-base">{user.name}</td>
                 <td className="px-6 py-4 text-gray-600">{user.email}</td>
                 <td className="px-6 py-4 text-center">
                   <div className="flex justify-center gap-3">
-                    <Link to={`/admin/user/${user._id}`}>
-                    </Link>
+                    <Link to={`/admin/user/${user._id}`}></Link>
 
                     <button
                       onClick={() => setDeleteId(user._id)}
