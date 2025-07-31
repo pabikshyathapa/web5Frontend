@@ -52,7 +52,7 @@ const MyBag = () => {
   };
 
   const handleRemove = (itemId) => {
-    if (window.confirm("Are you sure you want to remove this item?")) {
+    {
       setCartItems((items) => items.filter((item) => (item._id || item.productId) !== itemId));
       setSelectedItems((ids) => ids.filter((id) => id !== itemId));
     }
